@@ -56,10 +56,10 @@ public class AdminController {
     }
 
 
-    @GetMapping("/get/users")
-    public ResponseEntity getUsers(){
-        return ResponseEntity.ok(dataAccessLayer.getUsers());
-    }
+//    @GetMapping("/get/users")
+//    public ResponseEntity getUsers(){
+//        return ResponseEntity.ok(dataAccessLayer.getUsers());
+//    }
 
     @PostMapping("/create/user")
     public ResponseEntity createUser(@RequestBody User user){

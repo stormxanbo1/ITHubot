@@ -52,7 +52,7 @@ public class SecurityController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
-//        signupRequest.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+        signupRequest.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         signupRequest.setRoles(Set.of("ROLE_USER"));
         String serviceResult = userService.newUser(signupRequest);
         if (Objects.equals(serviceResult, "Выберите другое имя")) {
@@ -69,7 +69,7 @@ public class SecurityController {
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
         UserDetails user = userService.loadUserByUsername(signinRequest.getUsername());
-        if (user == null ) {
+        if (user == null || !passwordEncoder.matches(signinRequest.getPassword(), user.getPassword()))  {
             logger.info("Ошибка авторизации пользователя " + signinRequest.getUsername());
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
