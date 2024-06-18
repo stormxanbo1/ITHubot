@@ -3,6 +3,8 @@ package com.example.ITHubot.Configuration;
 
 //import com.example.guitarApi.security.TokenFilter;
 //import com.example.guitarApi.service.UserDetailsServiceImpl;
+import com.example.ITHubot.Security.TokenFilter;
+import com.example.ITHubot.Service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,11 +3,12 @@ package com.example.ITHubot.Models;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "public", catalog = "ITHubotDB")
 public class User {
 
     @Id
@@ -24,4 +25,9 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserScore userScore;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>();
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "questions")
+@Table(name = "questions",schema = "public", catalog = "ITHubotDB")
 public class Question {
 
     @Id

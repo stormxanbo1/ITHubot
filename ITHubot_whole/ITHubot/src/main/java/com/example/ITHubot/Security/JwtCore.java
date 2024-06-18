@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtCore {
-    @Value("${guitarApi.app.secret}")
+    @Value("${ITHubot.app.secret}")
     private String secret;
-    @Value("${guitarApi.app.lifetime}")
+    @Value("${ITHubot.app.lifetime}")
     private int lifetime;
     private List<String> getRoles(UserDetails userDetails) {
         return userDetails.getAuthorities().stream()
@@ -27,8 +27,6 @@ public class JwtCore {
                 .setSubject(userDetails.getUsername())
                 .claim("id", ((UserDetailsImpl) userDetails).getId())
                 .claim("username", userDetails.getUsername())
-                .claim("email", ((UserDetailsImpl) userDetails).getEmail())
-                .claim("phoneNumber", ((UserDetailsImpl) userDetails).getPhoneNumber())
                 .claim("roles", getRoles(userDetails))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date().getTime() + lifetime)))

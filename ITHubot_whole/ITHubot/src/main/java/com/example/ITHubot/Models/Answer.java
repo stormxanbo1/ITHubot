@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "answers")
+@Table(name = "answers",schema = "public", catalog = "ITHubotDB")
 public class Answer {
 
     @Id

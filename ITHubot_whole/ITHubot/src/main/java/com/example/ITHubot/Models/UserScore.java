@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Data
 @Entity
-@Table(name = "user_scores")
+@Table(name = "user_scores",schema = "public", catalog = "ITHubotDB")
 public class UserScore {
 
     @Id
