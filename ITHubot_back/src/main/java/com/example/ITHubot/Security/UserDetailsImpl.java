@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String userName;
+    private String password;
     private Set<String> roles;
 //    private Date createdAt;
 
@@ -28,6 +29,7 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getUserId(),
                 user.getUsername(),
+                user.getPassword(),
                 user.getRoles());
 
     }
@@ -47,7 +49,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override

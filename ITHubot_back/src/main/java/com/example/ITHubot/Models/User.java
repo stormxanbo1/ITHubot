@@ -17,6 +17,9 @@ public class User {
 
     private String username;
 
+
+    private String password;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
