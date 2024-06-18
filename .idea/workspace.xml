@@ -1,7 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="8d715e6c-26e8-4daf-843d-4b8c8140c62b" name="Changes" comment="" />
+    <list default="true" id="8d715e6c-26e8-4daf-843d-4b8c8140c62b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/ITHubPyBot.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubPyBot/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Configuration/DataConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Configuration/JpaConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Configuration/SecurityConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Controllers/AdminController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Controllers/MainController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Controllers/SecurityController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Dal/DataAccessLayer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Dto/SigninRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Dto/SignupRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/ItHubotApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/Answer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/Question.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/Result.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/Test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Models/UserScore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Security/JwtCore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Security/TokenFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Security/UserDetailsImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/java/com/example/ITHubot/Service/UserDetailsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ITHubot_whole/ITHubot/src/test/java/com/example/ITHubot/ItHubotApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,9 +51,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 2
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
   <component name="ProjectId" id="2i2xXvnj32XFDXhp2HzhU5cOZZh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -24,7 +65,9 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/User/Desktop/проект java/ITHubot/ITHubot_whole/ITHubot",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/SystemX/Desktop/sharaga/practice/ITHubot/ITHubot_back/ITHubot",
+    "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -37,6 +80,8 @@
       <option name="presentableId" value="Default" />
       <updated>1718702515879</updated>
       <workItem from="1718702516869" duration="23000" />
+      <workItem from="1718720548708" duration="129000" />
+      <workItem from="1718720683894" duration="30000" />
     </task>
     <servers />
   </component>
