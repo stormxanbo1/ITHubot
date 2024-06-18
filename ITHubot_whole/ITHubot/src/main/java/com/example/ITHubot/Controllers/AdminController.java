@@ -24,13 +24,13 @@ import java.util.Set;
 public class AdminController {
     private final DataAccessLayer dataAccessLayer;
     private final UserDetailsServiceImpl userService;
-    private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+ /*   private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
     public void someMethod() {
         logger.debug("Debug message");
 //        logger.info("Info message");
         logger.warn("Warning message");
         logger.error("Error message");
-    }
+    }*/
     @Autowired
     public AdminController(UserDetailsServiceImpl userService, DataAccessLayer dataAccessLayer) {
         this.userService = userService;
@@ -61,8 +61,6 @@ public class AdminController {
         return ResponseEntity.ok(dataAccessLayer.getUsers());
     }
 
-
-
     @PostMapping("/create/user")
     public ResponseEntity createUser(@RequestBody User user){
         dataAccessLayer.createUser(user);
@@ -73,6 +71,154 @@ public class AdminController {
         dataAccessLayer.deleteUserById(id);
         return ResponseEntity.ok("User deleted successfully!");
     }
+    @PostMapping("update/user/{id}")
+    public ResponseEntity updateUserById(@PathVariable("id") long id, @RequestBody User newUser) {
+        dataAccessLayer.updateUser(id, newUser);
+        return ResponseEntity.ok("User updated!");
+    }
+    @GetMapping("get/user/{id}")
+    public ResponseEntity getUserById(@PathVariable("id") long id) {
+        dataAccessLayer.getUserById(id);
+        return ResponseEntity.ok("User updated!");
+    }
 
+    @GetMapping("/get/answer")
+    public ResponseEntity getAnswer(){
+        return ResponseEntity.ok(dataAccessLayer.getAnswer());
+    }
+
+    @PostMapping("/create/answer")
+    public ResponseEntity createAnswer(@RequestBody Answer answer){
+        dataAccessLayer.createAnswer(answer);
+        return ResponseEntity.ok("User added successfully!");
+    }
+    @DeleteMapping("/delete/answer/{id}")
+    public ResponseEntity deleteAnswerById(@PathVariable("id") long id){
+        dataAccessLayer.deleteAnswerById(id);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+    @PostMapping("update/answer/{id}")
+    public ResponseEntity updateAnswerById(@PathVariable("id") long id, @RequestBody Answer newAnswer) {
+        dataAccessLayer.updateAnswer(id, newAnswer);
+        return ResponseEntity.ok("User updated!");
+    }
+    @GetMapping("/get/question")
+    public ResponseEntity getQuestion(){
+        return ResponseEntity.ok(dataAccessLayer.getQuestion());
+    }
+
+    @PostMapping("/create/question")
+    public ResponseEntity createQuestion(@RequestBody Question question){
+        dataAccessLayer.createQuestion(question);
+        return ResponseEntity.ok("User added successfully!");
+    }
+    @DeleteMapping("/delete/question/{id}")
+    public ResponseEntity deleteQuestionById(@PathVariable("id") long id){
+        dataAccessLayer.deleteQuestionById(id);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+    @PostMapping("update/question/{id}")
+    public ResponseEntity updateQuestionById(@PathVariable("id") long id, @RequestBody Question newQuestion) {
+        dataAccessLayer.updateQuestion(id, newQuestion);
+        return ResponseEntity.ok("User updated!");
+    }
+    @GetMapping("/get/result")
+    public ResponseEntity getResult(){
+        return ResponseEntity.ok(dataAccessLayer.getAnswer());
+    }
+
+    @PostMapping("/create/result")
+    public ResponseEntity createResult(@RequestBody Result result){
+        dataAccessLayer.createResult(result);
+        return ResponseEntity.ok("User added successfully!");
+    }
+    @DeleteMapping("/delete/result/{id}")
+    public ResponseEntity deleteResultById(@PathVariable("id") long id){
+        dataAccessLayer.deleteResultById(id);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+    @PostMapping("update/result/{id}")
+    public ResponseEntity updateResultById(@PathVariable("id") long id, @RequestBody Result newResult) {
+        dataAccessLayer.updateResult(id, newResult);
+        return ResponseEntity.ok("User updated!");
+    }
+    @GetMapping("/get/test")
+    public ResponseEntity getTest(){
+        return ResponseEntity.ok(dataAccessLayer.getTest());
+    }
+
+    @PostMapping("/create/test")
+    public ResponseEntity createTest(@RequestBody Test Test){
+        dataAccessLayer.createTest(Test);
+        return ResponseEntity.ok("User added successfully!");
+    }
+    @DeleteMapping("/delete/test/{id}")
+    public ResponseEntity deleteTestById(@PathVariable("id") long id){
+        dataAccessLayer.deleteTestById(id);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+    @PostMapping("update/test/{id}")
+    public ResponseEntity updateTestById(@PathVariable("id") long id, @RequestBody Test newTest) {
+        dataAccessLayer.updateTest(id, newTest);
+        return ResponseEntity.ok("User updated!");
+    }
+    @GetMapping("/get/score")
+    public ResponseEntity getUserScore(){
+        return ResponseEntity.ok(dataAccessLayer.getAnswer());
+    }
+
+    @PostMapping("/create/userscore")
+    public ResponseEntity createUserScore(@RequestBody UserScore userScore ){
+        dataAccessLayer.createUserScore(userScore);
+        return ResponseEntity.ok("User added successfully!");
+    }
+    @DeleteMapping("/delete/userscore/{id}")
+    public ResponseEntity deleteUserScoreById(@PathVariable("id") long id){
+        dataAccessLayer.deleteUserScoreById(id);
+        return ResponseEntity.ok("User deleted successfully!");
+    }
+    @PostMapping("update/userscore/{id}")
+    public ResponseEntity updateUserScoreById(@PathVariable("id") long id, @RequestBody UserScore newUserScore) {
+        dataAccessLayer.updateUserScore(id, newUserScore);
+        return ResponseEntity.ok("User updated!");
+    }
+
+    @GetMapping("update/result/{id}")
+    public ResponseEntity getResultById(@PathVariable("id") long id) {
+        dataAccessLayer.getResultById(id);
+        return ResponseEntity.ok("result updated!");
+    }
+    @GetMapping("/get/results")
+    public ResponseEntity getResults(){
+        return ResponseEntity.ok(dataAccessLayer.getResults());
+    }
+    @GetMapping("update/test/{id}")
+    public ResponseEntity getTestById(@PathVariable("id") long id) {
+        dataAccessLayer.getTestById(id);
+        return ResponseEntity.ok("result updated!");
+    }
+    @GetMapping("update/userScore/{id}")
+    public ResponseEntity getUserScoreById(@PathVariable("id") long id) {
+        dataAccessLayer.getUserScoreById(id);
+        return ResponseEntity.ok("result updated!");
+    }
+
+    @GetMapping("/get/userScores")
+    public ResponseEntity getUserScores(){
+        return ResponseEntity.ok(dataAccessLayer.getUserScores());
+    }
+
+    @GetMapping("get/question/{id}")
+    public ResponseEntity getQuestionById(@PathVariable("id") long id) {
+        dataAccessLayer.getQuestionById(id);
+        return ResponseEntity.ok("User updated!");
+    }
+
+
+    @GetMapping("get/answer/{id}")
+    public ResponseEntity getAnswerById(@PathVariable("id") long id) {
+        dataAccessLayer.getAnswerById(id);
+        return ResponseEntity.ok("User updated!");
+    }
 
 }
