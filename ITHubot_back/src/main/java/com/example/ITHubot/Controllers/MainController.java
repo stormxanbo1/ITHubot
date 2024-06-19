@@ -9,6 +9,7 @@ import com.example.ITHubot.Models.*;
 import com.example.ITHubot.Security.JwtCore;
 import com.example.ITHubot.Service.TestEvaluationService;
 import com.example.ITHubot.Service.UserDetailsServiceImpl;
+import com.example.ITHubot.Service.UserScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,13 @@ import java.util.Objects;
 import java.util.Set;
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping("/admin")
+@RequestMapping("/main")
 
 public class MainController {
     @Autowired
     private TestEvaluationService testEvaluationService;
-
+    @Autowired
+    private UserScoreService userScoreService;
     private final DataAccessLayer dataAccessLayer;
     private final UserDetailsServiceImpl userService;
 
@@ -44,7 +46,7 @@ public class MainController {
     }
 
 //////////////////////////////////
-@PostMapping
+@PostMapping("/create/result")
 public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) {
     User user = dataAccessLayer.getUserById(resultRequest.getUserId());
     if (user == null) {
@@ -65,6 +67,7 @@ public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) 
     result.setCompletedAt(new Date());
 
     dataAccessLayer.createResult(result);
+    userScoreService.updateUserScore(user, score);
 
     return ResponseEntity.ok("Result created successfully");
 }

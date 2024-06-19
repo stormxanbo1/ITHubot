@@ -4,11 +4,9 @@ import com.example.ITHubot.Dal.DataAccessLayer;
 
 import com.example.ITHubot.Models.Question;
 import com.example.ITHubot.Models.Test;
-import com.example.ITHubot.Security.UserDetailsImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
