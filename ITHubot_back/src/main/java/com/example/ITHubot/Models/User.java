@@ -33,4 +33,11 @@ public class User {
     @CollectionTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+
+    }
 }

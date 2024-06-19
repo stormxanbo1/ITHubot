@@ -26,4 +26,10 @@ public class Answer {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 }

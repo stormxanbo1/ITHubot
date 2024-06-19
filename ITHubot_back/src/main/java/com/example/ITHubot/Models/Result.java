@@ -25,4 +25,10 @@ public class Result {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date completedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        completedAt = new Date();
+
+    }
 }
