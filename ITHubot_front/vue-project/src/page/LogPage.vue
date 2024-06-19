@@ -119,104 +119,85 @@ export default {
 </template>
 
 <style scoped>
-.regi{
-  color: black;
-}
-.regist{
-  margin-top: 50px;
-  
-}
-.error {
-  font-size: 28px;
-  color: red;
-}
-input {
-  margin-bottom: 1vh;
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    241deg,
-    rgb(239, 161, 255) 0%,
-    rgb(255, 255, 255) 100%
-  );
-  animation: gradient 2s infinite linear;
-  background-size: 400%;
-  height: 5vh;
-  width: 30vh;
-  border-color: rgba(252, 0, 255, 1);
-  border-radius: 10px;
-  align-items: center;
-  font-size: 32px;
-}
 .All {
-  display: column;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
-  max-height: 100vh;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+  font-family: 'Helvetica Neue', sans-serif;
 }
 
-.regBT {
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    241deg,
-    rgba(0, 254, 255, 1) 0%,
-    rgba(252, 0, 255, 1) 100%
-  );
-  animation: gradient 5s infinite linear;
-  background-size: 400%;
-  width: auto;
-  height: auto;
-  color: aliceblue;
-  background-color: rgb(203, 148, 255);
-  border-color: azure;
-  border-radius: 35px;
-  font-size: 35px;
+header, footer {
+  display: none;
 }
 
 .reg_window {
-  width: 100%;
-  height: 100%;
-  margin-top: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  padding: 40px;
+  text-align: center;
+  width: 300px;
 }
 
 .reg_input {
-  width: 100%;
-  height: 100%;
-  margin-top: 10vh;
-  margin-bottom: 5%;
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 35px;
-  color: blueviolet;
-  font-weight: bold;
-}
-.log {
-  height: auto;
-  width: auto;
-  align-items: center;
-  justify-content: space-around;
-  margin-bottom: 3vh;
-}
-.reg {
-  height: auto;
-  width: auto;
+  margin-bottom: 20px;
 }
 
-@keyframes gradient {
-  0% {
-    background-position: 80% 0%;
-  }
-  50% {
-    background-position: 20% 100%;
-  }
-  100% {
-    background-position: 80% 0%;
-  }
+.reg_input input {
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 100%;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.reg_input input:focus {
+  border-color: #ff6f61;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.regBT {
+  padding: 12px 24px;
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff6f61, #d15b5b);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s;
+  width: 100%;
+}
+
+.regBT:hover {
+  background: linear-gradient(135deg, #ff857a, #e76e6e);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.regist {
+  margin-top: 20px;
+}
+
+.regi {
+  color: #ff6f61;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.regi:hover {
+  color: #d15b5b;
+}
+
+.error {
+  font-size: 18px;
+  color: red;
+  margin-bottom: 20px;
 }
 </style>
