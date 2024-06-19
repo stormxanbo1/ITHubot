@@ -24,10 +24,10 @@ export default {
       this.$router.push({ path: '/search', query: { q: this.searchQuery } });
     },
     mainMenu() {
-      window.location.href = '/auth/main';
+      window.location.href = '/main';
     },
-    account() {
-      window.location.href = '/auth/account';
+    TestCreater() {
+      window.location.href = '/create';
     },
     workout(){
       window.location.href = '/auth/workout';
@@ -84,9 +84,10 @@ export default {
       />
     </div>
     <div class="buttons">
-      <button @click="mainMenu()">Главная</button>
-      <button @click="workout()">Тренеровки</button>
-      <button @click="MyWorkout()">Мои Тренеровки</button>
+      <button @click="mainMenu()">Список тестов</button>
+      <button @click="workout()">Конструктор теста</button>
+      <button @click="workout()">Телеграмм Бот</button>
+      
      
     </div>
     <div class="UserName">

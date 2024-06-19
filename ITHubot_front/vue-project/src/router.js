@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RegPage from './page/RegPage.vue';
 import LogPage from './page/LogPage.vue';
 import Main from './page/Main.vue';
+import 
 
 export default createRouter({
   history: createWebHistory(),

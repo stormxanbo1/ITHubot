@@ -1,16 +1,16 @@
 <template>
   
     <div class="main-container">
+      
       <Header />
-      <h1>Вы авторизовались</h1>
-      <h2>Добро пожаловать в нашего в конструктор тестов!</h2>
+      <h1> Список тестов </h1>
       
       <div class="card-container">
-        <div class="card" v-for="trainer in training" :key="trainer.id">
-          <img :src="trainer.user.img" alt="trainer-avatar" class="card-img-top" />
+        <div class="card" v-for="test in tests" :key="test.id">
+          
           <div class="card-body">
-            <h5 class="card-title">{{ trainer.user.name }}</h5>
-            <p class="card-text">{{ trainer.specialization }}</p>
+            <h5 class="card-title">{{ test.title }}</h5>
+            <p class="card-text">{{ test.description }}</p>
             <!-- <a :href="`/trainer/${trainer.id}`" class="btn btn-primary">Подробнее</a> -->
           </div>
         </div>
@@ -24,24 +24,24 @@
   import Header from '@/components/Heder.vue'
   import api from '@/api.js';
   
-  const training = ref(null);
+  const tests = ref(null);
   const route = useRoute();
   
-  const fetchTrainingDetail = async () => {
+  const fetchTestsDetail = async () => {
     try {
-      const response = await api.get('/unauthorized/get/coach/', {
+      const response = await api.get('/admin/get/test', {
         headers: {
           'Authorization': 'Bearer ' + $cookies.get('jwt')
         }
       });
      
-      training.value = response.data;
+      tests.value = response.data;
     } catch (error) {
       console.error(error);
     }
   };
   
-  // onMounted(fetchTrainingDetail);
+  onMounted(fetchTestsDetail);
   </script>
   
   <style scoped>
@@ -58,8 +58,9 @@
   }
   
   h1 {
+    border:black;
     font-size: 36px;
-    color: #4b0082;
+    color: #000000;
     margin: 20px 0;
   }
   
