@@ -4,6 +4,7 @@
       
       <Header />
       <h1> Список тестов </h1>
+      <button class="ADDButton"@click="TestCreater()">Добавить новый тест</button>
       
       <div class="card-container">
         <div class="card" v-for="test in tests" :key="test.testId">
@@ -26,6 +27,32 @@
   
   const tests = ref(null);
   const route = useRoute();
+  const TestCreater = async () => {
+      const TestData= {
+          title: "Test Name",
+          description: "Description Your Test"
+      }
+      try {
+        const response =  api.post('/admin/create/test', TestData,{
+          headers: {
+            'Authorization': 'Bearer ' + $cookies.get('jwt') 
+          }
+        })
+      .then(response => {
+        console.log('тест успешно создан')
+
+        window.location.reload();
+        
+      })
+      .catch(error => {
+        console.error('Ошибка при получении данных:', error);
+      });
+      
+      } catch (error) {
+          console.error(error);
+      }
+     
+    };
   
   const fetchTestsDetail = async () => {
     try {
@@ -41,11 +68,21 @@
       console.error(error);
     }
   };
+
   
   onMounted(fetchTestsDetail);
   </script>
   
   <style scoped>
+
+  .ADDButton{
+    display: flex;
+    margin-left: 70%;
+    background-color: #4b0082;
+    border-radius: 30px;
+    color:aliceblue;
+
+  }
   .main-container {
     display: flex;
     flex-direction: column;

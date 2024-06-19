@@ -26,27 +26,26 @@ export default {
     mainMenu() {
       window.location.href = '/main';
     },
-    TestCreater() {
-      window.location.href = '/create';
-    },
-    workout(){
-      window.location.href = '/auth/workout';
+
+    
+    tgHref(){
+      window.location.href = 'https://t.me/ITHubbbbot';
     },
     
     
   },
-  mounted() {
+//   mounted() {
 
 
-    const token = this.$cookies.get('jwt'); 
-    const decodedToken = jwt_decode.decode(token);
+//     const token = this.$cookies.get('jwt'); 
+//     const decodedToken = jwt_decode.decode(token);
 
-    if (decodedToken) {
-        this.userId = decodedToken.id;
+//     if (decodedToken) {
+//         this.userId = decodedToken.id;
          
-    } else {
-        console.log('Неверный токен');
-    }
+//     } else {
+//         console.log('Неверный токен');
+//     }
 
 
 
@@ -70,7 +69,7 @@ export default {
 //     console.error(error);
 //   }
 // }
-}};
+};
 </script>
 
 <template>
@@ -86,14 +85,15 @@ export default {
     </div>
     <div class="buttons">
       <button @click="mainMenu()">Список тестов</button>
-      <button @click="workout()">Конструктор теста</button>
-      <button @click="workout()">Телеграмм Бот</button>
+      
+      <button @click="tgHref()">Телеграмм Бот</button>
       
      
     </div>
+    
     <div class="UserName">
       <a> {{ this.user.name }}</a>
-    
+      <button class="logout" @click="logOut()">Выйти из аккаунта</button>
 
     </div>
     

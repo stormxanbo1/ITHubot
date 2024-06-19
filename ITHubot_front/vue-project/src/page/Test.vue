@@ -24,6 +24,7 @@ const fetchTestDetail = async () => {
     });
     console.log(response.data);
     test.value = response.data;
+    
   } catch (error) {
     console.error(error);
   }
@@ -39,6 +40,7 @@ const fetchQuestionDetail = async () => {
     });
     console.log(response.data);
     questions.value = response.data;
+    
   } catch (error) {
     console.error(error);
   }
@@ -53,7 +55,7 @@ const updateTestDetail = async () => {
       }
     });
     console.log(response.data);
-    // Optionally show a success message or navigate to another page
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -67,7 +69,7 @@ const updateQuestionDetail = async (question) => {
       }
     });
     console.log(response.data);
-    // Optionally show a success message or navigate to another page
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
@@ -81,8 +83,9 @@ const addQuestion = async () => {
       }
     });
     console.log(response.data);
-    questions.value.push(response.data);
-    newQuestion.value = { content: '' }; // Очистить форму после добавления
+    // questions.value.push(response.data);
+    newQuestion.value = { test: {testId: route.params.id},content: '' }; // Очистить форму после добавления
+    window.location.reload();
   } catch (error) {
     console.error(error);
   }
