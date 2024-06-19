@@ -5,6 +5,7 @@ import com.example.ITHubot.Dal.DataAccessLayer;
 import com.example.ITHubot.Dto.SignupRequest;
 import com.example.ITHubot.Models.*;
 import com.example.ITHubot.Security.JwtCore;
+import com.example.ITHubot.Service.TestEvaluationService;
 import com.example.ITHubot.Service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,9 @@ public class AdminController {
     private JwtCore jwtCore;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TestEvaluationService testEvaluationService;
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> createAdmin(@RequestBody SignupRequest signupRequest) {
@@ -220,5 +224,6 @@ public class AdminController {
         dataAccessLayer.getAnswerById(id);
         return ResponseEntity.ok("User updated!");
     }
+    /////////////////////////////////////////////////////////
 
 }

@@ -367,5 +367,30 @@ public class DataAccessLayer {
         return resultList;
     }
 
+    //////////////////////////////////////////////////////////////
+    public List<Question> getQuestionsByTest(Test test) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Question> query = builder.createQuery(Question.class);
+        Root<Question> root = query.from(Question.class);
+        query.select(root).where(builder.equal(root.get("test"), test));
+        List<Question> questions = session.createQuery(query).getResultList();
+        session.getTransaction().commit();
+        session.close();
+        return questions;
+    }
+
+    public Long getCorrectAnswerIdByQuestion(Question question) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("SELECT a.answerId FROM Answer a WHERE a.question = :question AND a.isCorrect = true")
+                .setParameter("question", question);
+        Long correctAnswerId = (Long) query.uniqueResult();
+        session.getTransaction().commit();
+        session.close();
+        return correctAnswerId;
+    }
+
 
 }

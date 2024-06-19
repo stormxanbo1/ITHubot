@@ -3,9 +3,11 @@ package com.example.ITHubot.Controllers;
 
 
 import com.example.ITHubot.Dal.DataAccessLayer;
+import com.example.ITHubot.Dto.ResultRequest;
 import com.example.ITHubot.Dto.SignupRequest;
 import com.example.ITHubot.Models.*;
 import com.example.ITHubot.Security.JwtCore;
+import com.example.ITHubot.Service.TestEvaluationService;
 import com.example.ITHubot.Service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 @RestController
@@ -23,6 +26,8 @@ import java.util.Set;
 @RequestMapping("/admin")
 
 public class MainController {
+    @Autowired
+    private TestEvaluationService testEvaluationService;
 
     private final DataAccessLayer dataAccessLayer;
     private final UserDetailsServiceImpl userService;
@@ -38,5 +43,29 @@ public class MainController {
         return ResponseEntity.ok(dataAccessLayer.getUsers());
     }
 
+//////////////////////////////////
+@PostMapping
+public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) {
+    User user = dataAccessLayer.getUserById(resultRequest.getUserId());
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    }
 
+    Test test = dataAccessLayer.getTestById(resultRequest.getTestId());
+    if (test == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found");
+    }
+
+    int score = testEvaluationService.calculateScore(test, resultRequest.getUserAnswers());
+
+    Result result = new Result();
+    result.setUser(user);
+    result.setTest(test);
+    result.setScore(score);
+    result.setCompletedAt(new Date());
+
+    dataAccessLayer.createResult(result);
+
+    return ResponseEntity.ok("Result created successfully");
+}
 }
