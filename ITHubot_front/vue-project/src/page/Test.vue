@@ -90,6 +90,21 @@ const addQuestion = async () => {
     console.error(error);
   }
 };
+const addQuestion = async () => {
+  const id = route.params.id;
+  try {
+    const response = await api.post(`/admin/create/question`, newQuestion.value, {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    console.log(response.data);
+    questions.value.push(response.data);
+    newQuestion.value = { content: '' }; // Очистить форму после добавления
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 onMounted(() => {
   fetchTestDetail();
