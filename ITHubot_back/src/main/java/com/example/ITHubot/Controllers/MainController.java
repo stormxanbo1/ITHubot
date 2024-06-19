@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping("/main")
+@RequestMapping("/admin")
 
 public class MainController {
 
@@ -31,6 +31,11 @@ public class MainController {
     public MainController(UserDetailsServiceImpl userService, DataAccessLayer dataAccessLayer) {
         this.userService = userService;
         this.dataAccessLayer = dataAccessLayer;
+    }
+    @GetMapping("/get/users")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity getUsers(){
+        return ResponseEntity.ok(dataAccessLayer.getUsers());
     }
 
 

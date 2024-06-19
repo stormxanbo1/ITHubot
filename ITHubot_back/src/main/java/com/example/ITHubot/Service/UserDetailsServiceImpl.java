@@ -23,6 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public String newUser(SignupRequest signupRequest) {
         User user = new User();
         user.setUsername(signupRequest.getName());
+        user.setPassword(signupRequest.getPassword());
         user.getUserId();
 
         return dataAccessLayer.newUserToDatabase(user);
