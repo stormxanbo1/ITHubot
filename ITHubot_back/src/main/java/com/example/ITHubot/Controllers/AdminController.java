@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -225,5 +226,14 @@ public class AdminController {
         return ResponseEntity.ok("User updated!");
     }
     /////////////////////////////////////////////////////////
+
+    @GetMapping("/questions/{id}")
+    public ResponseEntity<?> getQuestionsByTestId(@PathVariable("id") Long id) {
+        List<Question> questions = dataAccessLayer.getQuestionsByTestID(id);
+        if (questions.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given test");
+        }
+        return ResponseEntity.ok(questions);
+    }
 
 }

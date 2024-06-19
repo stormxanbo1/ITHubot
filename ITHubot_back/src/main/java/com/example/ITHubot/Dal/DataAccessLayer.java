@@ -381,6 +381,7 @@ public class DataAccessLayer {
         return questions;
     }
 
+
     public Long getCorrectAnswerIdByQuestion(Question question) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -392,5 +393,17 @@ public class DataAccessLayer {
         return correctAnswerId;
     }
 
+    public List<Question> getQuestionsByTestID(Long id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Question> query = builder.createQuery(Question.class);
+        Root<Question> root = query.from(Question.class);
+        query.select(root).where(builder.equal(root.get("test").get("testId"), id));
+        List<Question> questions = session.createQuery(query).getResultList();
+        session.getTransaction().commit();
+        session.close();
+        return questions;
+    }
 
 }
