@@ -50,25 +50,26 @@ export default {
 
 
 
-    try {
-    const response =  api.get('/admin/get/user/'+ this.userId, {
-      headers: {
-        'Authorization': 'Bearer ' + this.$cookies.get('jwt') 
-      }
-    })
-      .then(response => {
-        this.user.name = response.data.username
+//     try {
+//     const response =  api.get('/admin/get/user/'+ this.userId, {
+//       headers: {
+//         'Authorization': 'Bearer ' + this.$cookies.get('jwt') 
+//       }
+//     })
+//       .then(response => {
+//         this.user.name = response.data.username
 
         
         
-      })
-      .catch(error => {
-        console.error('Ошибка при получении данных:', error);
-      });
+//       })
+//       .catch(error => {
+//         console.error('Ошибка при получении данных:', error);
+//       });
       
-    } catch (error) {
-    console.error(error);
-  }
+//     } catch (error) {
+//     console.error(error);
+//   }
+// }
 }};
 </script>
 

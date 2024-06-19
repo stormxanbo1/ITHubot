@@ -196,10 +196,10 @@ public class AdminController {
     public ResponseEntity getResults(){
         return ResponseEntity.ok(dataAccessLayer.getResults());
     }
-    @GetMapping("update/test/{id}")
+    @GetMapping("get/test/{id}")
     public ResponseEntity getTestById(@PathVariable("id") long id) {
-        dataAccessLayer.getTestById(id);
-        return ResponseEntity.ok("result updated!");
+
+        return ResponseEntity.ok(dataAccessLayer.getTestById(id));
     }
     @GetMapping("update/userScore/{id}")
     public ResponseEntity getUserScoreById(@PathVariable("id") long id) {

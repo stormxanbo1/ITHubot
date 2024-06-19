@@ -6,12 +6,12 @@
       <h1> Список тестов </h1>
       
       <div class="card-container">
-        <div class="card" v-for="test in tests" :key="test.id">
+        <div class="card" v-for="test in tests" :key="test.testId">
           
           <div class="card-body">
             <h5 class="card-title">{{ test.title }}</h5>
             <p class="card-text">{{ test.description }}</p>
-            <!-- <a :href="`/trainer/${trainer.id}`" class="btn btn-primary">Подробнее</a> -->
+            <a :href="`/test/${test.testId}`" class="btn btn-primary">Редактировать</a>
           </div>
         </div>
       </div>
@@ -36,6 +36,7 @@
       });
      
       tests.value = response.data;
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
