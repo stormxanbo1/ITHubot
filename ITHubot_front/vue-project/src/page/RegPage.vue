@@ -1,7 +1,7 @@
 <script>
 import api from "../api.js";
 import { useVuelidate } from "@vuelidate/core";
-import { required, email } from "@vuelidate/validators";
+import { required  } from "@vuelidate/validators";
 
 export default {
   setup() {
@@ -12,7 +12,6 @@ export default {
     return {
       users: [],
       userName: "",
-      userEmail: "",
       userPassword: "",
       errorMessage: "",
     };
@@ -21,20 +20,18 @@ export default {
     return {
       userName: { required }, // Matches this.firstName
       userPassword: { required }, // Matches this.lastName
-      userEmail: { required, email }, // Matches this.contact.email
     };
   },
   methods: {
     async signupUser() {
       const newUser = {
         name: this.userName,
-        email: this.userEmail,
         password: this.userPassword,
       };
       const isFormCorrect = await this.v$.$validate();
       if (isFormCorrect) {
         try {
-          const response = await api.post("/auth/signup", newUser);
+          const response = await api.post("/secured/signup", newUser);
           console.log("Успешно зарегистрирован:", newUser);
           window.location.href = "/log";
         } catch (error) {
@@ -85,7 +82,7 @@ export default {
         <div class="reg_input">
           <input type="text" v-model.trim="userName" placeholder="name" />
           <div v-if="v$.userName.$error">Name field has an error.</div>
-          <input type="email" v-model.trim="userEmail" placeholder="email" />
+
           <input
             type="password"
             v-model.trim="userPassword"

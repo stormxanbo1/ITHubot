@@ -1,7 +1,7 @@
 <script>
 import api from '../api.js';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { required } from '@vuelidate/validators';
 
 
 export default {
@@ -38,14 +38,14 @@ export default {
 
     async signupUser() {
       const User = {
-        name: this.userName,
+        username: this.userName,
         password: this.userPassword,
       };
       const isFormCorrect = await this.v$.$validate()
       if (isFormCorrect){
         try {
           const response = await api
-            .post('/auth/signin', User)
+            .post('/secured/signin', User)
             .then((response) => {
               this.responseData = response.data;
               this.errorMessage = response.data.message;
@@ -54,7 +54,7 @@ export default {
               this.$cookies.set('jwt', this.jwt, '1d');
               console.log(this.jwt);
               console.log('авторизован:', User);
-              window.location.href = '/auth/main';
+              window.location.href = '/secured/main';
             })
             .catch((error) => {
               console.error(error);
