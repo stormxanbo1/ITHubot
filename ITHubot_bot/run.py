@@ -2,15 +2,12 @@ import asyncio
 import logging
 import os
 import requests  # Или aiohttp для асинхронных запросов
+from aiohttp import ClientSession
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import CommandStart, Command
-
-# Инициализировать морфологический анализатор pymorphy2 для русского языка
-# import pymorphy2
-#
-# morph = pymorphy2.MorphAnalyzer(lang='ru')
+from aiogram.types import CallbackQuery
 
 # Загрузить переменные среды из файла .env
 load_dotenv()
@@ -18,7 +15,7 @@ load_dotenv()
 # Инициализируйте бота с помощью токена из переменных среды.
 bot = Bot(token=os.getenv('TOKEN'))
 
-# Инициализируйте бота с помощью токена из среды ожидания.
+# Инициализируйте диспетчер.
 dp = Dispatcher()
 
 # Определить кнопки для главного меню бота
@@ -38,7 +35,6 @@ main_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-
 # Определите обработчик для команды /start.
 @dp.message(CommandStart())
 async def cmd_start(message: Message):
@@ -48,7 +44,6 @@ async def cmd_start(message: Message):
         "Для получения справки используйте кнопку 'Помощь'.",
         reply_markup=main_keyboard  # Отправьте клавиатуру главного меню с сообщением
     )
-
 
 # Определите обработчик для команды /help.
 @dp.message(Command('help'))
@@ -67,30 +62,40 @@ async def get_help(message: Message):
         "- Получи результаты и узнай, насколько хорошо ты справился!"
     )
 
-
 # Определите обработчик для кнопки "Тесты".
 @dp.message(lambda message: message.text == 'Тесты')
 async def handle_tests_button(message: Message):
-    try:
-        # Здесь нужно выполнить запрос на ваш сервер для получения списка тестов
-        response = requests.get('http://localhost:3333/admin/get/test')  # Или используйте aiohttp для асинхронных запросов
+    async with ClientSession() as session:
+        try:
+            async with session.get('http://localhost:3333/admin/get/test') as response:
+                if response.status == 200:
+                    tests = await response.json()
+                    logging.info(f"Полученные данные: {tests}")  # Логирование полного JSON-ответа
 
-        if response.status_code == 200:
-            tests = response.json()
-            tests_list = "\n".join([f"{test['id']}. {test['name']}" for test in tests])
-            await message.answer(f"Список доступных тестов:\n\n{tests_list}")
-        else:
-            await message.answer("Произошла ошибка при загрузке списка тестов")
-    except Exception as e:
-        logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
-        await message.answer("Произошла ошибка при выполнении запроса на сервер")
+                    # Предполагаем, что ответ содержит массив объектов
+                    tests_list = "\n".join([f"{test.get('title', 'No title')}\n{test.get('description', 'No description')}\n" for test in tests])
+                    await message.answer(f"Список доступных тестов:\n\n{tests_list}")
+                else:
+                    await message.answer("Произошла ошибка при загрузке списка тестов")
+        except Exception as e:
+            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
+            await message.answer("Произошла ошибка при выполнении запроса на сервер")
 
+
+# Обработчик для инлайн-кнопок
+@dp.callback_query()
+async def handle_test_selection(callback_query: CallbackQuery):
+    test_id = callback_query.data.split("_")[1]
+    await callback_query.message.answer(f"Вы выбрали тест с ID: {test_id}")
+    # Здесь можно добавить логику для начала прохождения теста
+
+    # Ответ на callback_query, чтобы убрать часы ожидания
+    await callback_query.answer()
 
 # Основная функция для запуска бота
 async def main():
     # Начать опрос обновлений из Telegram
     await dp.start_polling(bot)
-
 
 # Точка входа в сценарий
 if __name__ == '__main__':
