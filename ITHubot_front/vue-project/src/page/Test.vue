@@ -6,13 +6,22 @@ import api from '@/api.js';
 
 const test = ref(null);
 const questions = ref(null);
-const route = useRoute();
+const answers = ref(null);
+const route = useRoute(); // New ref for answers
 const newQuestion = ref({
   test: {
     testId: route.params.id
   },
   content: '',
 });
+
+const newAnswer = ref({
+  question: null, // Will be set dynamically
+  content: '',
+  isCorrect: false,
+});
+
+
 
 const fetchTestDetail = async () => {
   const id = route.params.id;
@@ -22,9 +31,7 @@ const fetchTestDetail = async () => {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
     test.value = response.data;
-    
   } catch (error) {
     console.error(error);
   }
@@ -38,9 +45,20 @@ const fetchQuestionDetail = async () => {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
     questions.value = response.data;
-    
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const fetchAnswersForQuestion = async (questionId) => {
+  try {
+    const response = await api.get(`/admin/get/answer?questionId=${questionId}`, {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    answers.value = response.data;
   } catch (error) {
     console.error(error);
   }
@@ -54,7 +72,6 @@ const updateTestDetail = async () => {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
     window.location.reload();
   } catch (error) {
     console.error(error);
@@ -68,12 +85,12 @@ const updateQuestionDetail = async (question) => {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
     window.location.reload();
   } catch (error) {
     console.error(error);
   }
 };
+
 const addQuestion = async () => {
   const id = route.params.id;
   try {
@@ -82,25 +99,23 @@ const addQuestion = async () => {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
-    // questions.value.push(response.data);
-    newQuestion.value = { test: {testId: route.params.id},content: '' }; // Очистить форму после добавления
+    newQuestion.value = { test: {testId: route.params.id}, content: '' };
     window.location.reload();
   } catch (error) {
     console.error(error);
   }
 };
-const addQuestion = async () => {
-  const id = route.params.id;
+
+const addAnswer = async (questionId) => {
+  newAnswer.value.question = questions.value.find(q => q.questionId === questionId);
   try {
-    const response = await api.post(`/admin/create/question`, newQuestion.value, {
+    const response = await api.post(`/admin/create/answer`, newAnswer.value, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data);
-    questions.value.push(response.data);
-    newQuestion.value = { content: '' }; // Очистить форму после добавления
+    newAnswer.value = { question: null, content: '', isCorrect: false };
+    fetchAnswersForQuestion(questionId); // Reload answers for the current question
   } catch (error) {
     console.error(error);
   }
@@ -110,6 +125,7 @@ onMounted(() => {
   fetchTestDetail();
   fetchQuestionDetail();
 });
+
 </script>
 
 <template>
@@ -141,7 +157,25 @@ onMounted(() => {
               <label for="content">Вопрос</label>
               <input id="content" v-model="question.content" type="text" required />
               
-            
+              <h4>Ответы на вопрос</h4>
+              <ul>
+                <li v-for="answer in answers" :key="answer.answerId">{{ answer.content }}</li>
+              </ul>
+              
+              <h5>Добавить новый ответ</h5>
+              <form @submit.prevent="addAnswer(question.questionId)">
+                <div>
+                  <label for="new-answer">Новый ответ</label>
+                  <input id="new-answer" v-model="newAnswer.content" type="text" required />
+                </div>
+                <div>
+                  <label>
+                    <input type="checkbox" v-model="newAnswer.isCorrect" />
+                    Правильный ответ
+                  </label>
+                </div>
+                <button type="submit">Добавить ответ</button>
+              </form>
               
               <button type="submit">Сохранить изменения</button>
             </div>
