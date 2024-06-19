@@ -7,6 +7,12 @@ import api from '@/api.js';
 const test = ref(null);
 const questions = ref(null);
 const route = useRoute();
+const newQuestion = ref({
+  test: {
+    testId: route.params.id
+  },
+  content: '',
+});
 
 const fetchTestDetail = async () => {
   const id = route.params.id;
@@ -66,6 +72,21 @@ const updateQuestionDetail = async (question) => {
     console.error(error);
   }
 };
+const addQuestion = async () => {
+  const id = route.params.id;
+  try {
+    const response = await api.post(`/admin/create/question`, newQuestion.value, {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    console.log(response.data);
+    questions.value.push(response.data);
+    newQuestion.value = { content: '' }; // Очистить форму после добавления
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 onMounted(() => {
   fetchTestDetail();
@@ -109,6 +130,16 @@ onMounted(() => {
           </form>
         </div>
       </div>
+
+      <h3>Добавить новый вопрос</h3>
+      <form @submit.prevent="addQuestion">
+        <div>
+          <label for="new-content">Новый вопрос</label>
+          <input id="new-content" v-model="newQuestion.content" type="text" required />
+        </div>
+        
+        <button type="submit">Добавить вопрос</button>
+      </form>
     </div>
   </div>
 </template>
