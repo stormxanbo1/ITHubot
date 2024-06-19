@@ -52,9 +52,8 @@ export default {
               this.jwt = response.data;
               this.$cookies.remove('jwt');
               this.$cookies.set('jwt', this.jwt, '1d');
-              console.log(this.jwt);
-              console.log('авторизован:', User);
-              window.location.href = '/secured/main';
+             
+              window.location.href = '/main';
             })
             .catch((error) => {
               console.error(error);
@@ -65,30 +64,7 @@ export default {
       }
     },
   },
-  // created() {
-  //   api.get('unauthorized/get/users/')
-  //     .then(response => {
-  //       this.users = response.data;
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
 
-  // },
-  // created(){
-  //   const newUser = {
-  //     userName: '',
-  //     userAge: '',
-  //     userPass: ''
-  //     }
-  //   api.post('/auth/signup', newUser)
-  //     .then(response => {
-  //       this.users = response.data;
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
 };
 </script>
 

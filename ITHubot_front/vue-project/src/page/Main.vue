@@ -1,8 +1,10 @@
 <template>
+  
     <div class="main-container">
+      <Header />
       <h1>Вы авторизовались</h1>
-      <h2>Добро пожаловать в нашего великолепного бота!</h2>
-      <h1>Список тренеров</h1>
+      <h2>Добро пожаловать в нашего в конструктор тестов!</h2>
+      
       <div class="card-container">
         <div class="card" v-for="trainer in training" :key="trainer.id">
           <img :src="trainer.user.img" alt="trainer-avatar" class="card-img-top" />
@@ -19,6 +21,7 @@
   <script setup>
   import { onMounted, ref } from 'vue';
   import { useRoute } from 'vue-router';
+  import Header from '@/components/Heder.vue'
   import api from '@/api.js';
   
   const training = ref(null);
@@ -31,14 +34,14 @@
           'Authorization': 'Bearer ' + $cookies.get('jwt')
         }
       });
-      console.log(response.data);
+     
       training.value = response.data;
     } catch (error) {
       console.error(error);
     }
   };
   
-  onMounted(fetchTrainingDetail);
+  // onMounted(fetchTrainingDetail);
   </script>
   
   <style scoped>
@@ -51,6 +54,7 @@
     padding: 20px;
     background: linear-gradient(135deg, #ffafbd, #ffc3a0);
     font-family: 'Helvetica Neue', sans-serif;
+    min-width: 70%;
   }
   
   h1 {

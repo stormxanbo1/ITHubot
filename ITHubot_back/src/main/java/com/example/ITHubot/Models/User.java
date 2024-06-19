@@ -1,7 +1,10 @@
 package com.example.ITHubot.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import jakarta.persistence.*;
+
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,9 +27,11 @@ public class User {
     private Date createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Result> results;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private UserScore userScore;
 
     @ElementCollection(fetch = FetchType.EAGER)

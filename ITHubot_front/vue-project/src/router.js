@@ -8,7 +8,7 @@ export default createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/reg', component: RegPage },
-    { path: '/log', component: LogPage },
+    { path: '/log', component: LogPage, alias: '/' },
     { path: '/main', component: Main }
   
 

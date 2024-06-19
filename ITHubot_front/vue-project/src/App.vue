@@ -6,7 +6,7 @@
 
 <style>
 body {
-  background: rgb(224, 177, 203);
+  background: rgb(255, 255, 255);
   
 }
 </style>

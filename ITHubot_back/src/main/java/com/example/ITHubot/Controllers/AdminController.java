@@ -82,8 +82,8 @@ public class AdminController {
     }
     @GetMapping("get/user/{id}")
     public ResponseEntity getUserById(@PathVariable("id") long id) {
-        dataAccessLayer.getUserById(id);
-        return ResponseEntity.ok("User updated!");
+
+        return ResponseEntity.ok((dataAccessLayer.getUserById(id)));
     }
 
     @GetMapping("/get/answer")

@@ -1,5 +1,6 @@
 package com.example.ITHubot.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.util.Date;
@@ -27,6 +28,7 @@ public class Question {
     private Date updatedAt;
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Answer> answers;
 
     @PrePersist
