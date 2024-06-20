@@ -31,7 +31,7 @@ public class User {
     private Set<Result> results;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+
     private UserScore userScore;
 
     @ElementCollection(fetch = FetchType.EAGER)
