@@ -406,4 +406,41 @@ public class DataAccessLayer {
         return questions;
     }
 
+    public List<Answer> getAnswersByQuestionId(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            // Создание запроса с использованием Criteria API
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Answer> query = builder.createQuery(Answer.class);
+            Root<Answer> root = query.from(Answer.class);
+
+            // Условие для выбора ответов по ID вопроса
+            query.select(root).where(builder.equal(root.get("question").get("questionId"), id));
+
+            // Выполнение запроса и получение результатов
+            List<Answer> answers = session.createQuery(query).getResultList();
+
+            session.getTransaction().commit();
+            return answers;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }
+
+//public List<Answer> getAnswerByQuestionID(Long id) {
+//    Session session = sessionFactory.openSession();
+//    session.beginTransaction();
+//    CriteriaBuilder builder = session.getCriteriaBuilder();
+//    CriteriaQuery<Answer> query = builder.createQuery(Answer.class);
+//    Root<Answer> root = query.from(Answer.class);
+//    query.select(root).where(builder.equal(root.get("question").get("questionId"), id));
+//    List<Answer> answers = session.createQuery(query).getResultList();
+//    session.getTransaction().commit();
+//    session.close();
+//    return answers;
+//}
