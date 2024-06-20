@@ -1,3 +1,66 @@
+<template>
+  <div>
+    <Header />
+    <div class="container" v-if="test">
+      <h1>Редактирование теста</h1>
+      <form @submit.prevent="updateTestDetail" class="form-section">
+        <div class="form-group">
+          <label for="title">Название теста</label>
+          <input id="title" v-model="test.title" type="text" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Описание теста</label>
+          <textarea id="description" v-model="test.description" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Сохранить изменения</button>
+      </form>
+
+      <div class="card-container">
+        <div class="card" v-for="question in questions" :key="question.questionId">
+          <form @submit.prevent="updateQuestionDetail(question)" class="form-section">
+            <div class="card-body">
+              <div class="form-group">
+                <label for="content">Вопрос</label>
+                <input id="content" v-model="question.content" type="text" required />
+              </div>
+              <h4>Ответы на вопрос</h4>
+              <ul>
+                <li v-for="answer in question.answers" :key="answer.answerId">{{ answer.content }}</li>
+              </ul>
+
+              <h5>Добавить новый ответ</h5>
+              <form @submit.prevent="addAnswer(question.questionId)" class="form-section">
+                <div class="form-group">
+                  <label for="new-answer">Новый ответ</label>
+                  <input id="new-answer" v-model="newAnswer.content" type="text" required />
+                </div>
+                <div class="form-group">
+                  <label>
+                    <input type="checkbox" v-model="newAnswer.isCorrect" />
+                    Правильный ответ
+                  </label>
+                </div>
+                <button type="submit" class="btn-secondary">Добавить ответ</button>
+              </form>
+
+              <button type="submit" class="btn-primary">Сохранить изменения</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <h3>Добавить новый вопрос</h3>
+      <form @submit.prevent="addQuestion" class="form-section">
+        <div class="form-group">
+          <label for="new-content">Новый вопрос</label>
+          <input id="new-content" v-model="newQuestion.content" type="text" required />
+        </div>
+        <button type="submit" class="btn-secondary">Добавить вопрос</button>
+      </form>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -6,7 +69,7 @@ import api from '@/api.js';
 
 const test = ref(null);
 const questions = ref([]);
-const route = useRoute(); 
+const route = useRoute();
 
 const newQuestion = ref({
   test: {
@@ -16,7 +79,7 @@ const newQuestion = ref({
 });
 
 const newAnswer = ref({
-  question: null, 
+  question: null,
   content: '',
   isCorrect: false,
 });
@@ -129,83 +192,31 @@ onMounted(() => {
 });
 </script>
 
-
-<template>
-  <div>
-    <Header />
-    <div class="container" v-if="test">
-      <h1>Редактирование теста</h1>
-      <form @submit.prevent="updateTestDetail">
-        <div>
-          <label for="title">Название теста</label>
-          <input id="title" v-model="test.title" type="text" required />
-        </div>
-        <div>
-          <label for="description">Описание теста</label>
-          <textarea id="description" v-model="test.description" required></textarea>
-        </div>
-        <button type="submit">Сохранить изменения</button>
-      </form>
-
-      <div class="card-container">
-        <div class="card" v-for="question in questions" :key="question.questionId">
-          <form @submit.prevent="updateQuestionDetail(question)">
-            <div class="card-body">
-              <label for="content">Вопрос</label>
-              <input id="content" v-model="question.content" type="text" required />
-              
-              <h4>Ответы на вопрос</h4>
-              <ul>
-                <li v-for="answer in question.answers" :key="answer.answerId">{{ answer.content }}</li>
-              </ul>
-              
-              <h5>Добавить новый ответ</h5>
-              <form @submit.prevent="addAnswer(question.questionId)">
-                <div>
-                  <label for="new-answer">Новый ответ</label>
-                  <input id="new-answer" v-model="newAnswer.content" type="text" required />
-                </div>
-                <div>
-                  <label>
-                    <input type="checkbox" v-model="newAnswer.isCorrect" />
-                    Правильный ответ
-                  </label>
-                </div>
-                <button type="submit">Добавить ответ</button>
-              </form>
-              
-              <button type="submit">Сохранить изменения</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <h3>Добавить новый вопрос</h3>
-      <form @submit.prevent="addQuestion">
-        <div>
-          <label for="new-content">Новый вопрос</label>
-          <input id="new-content" v-model="newQuestion.content" type="text" required />
-        </div>
-        <button type="submit">Добавить вопрос</button>
-      </form>
-    </div>
-  </div>
-</template>
-
-
 <style scoped>
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1 {
-  text-align: center;
-  color: #333;
+  font-size: 42px; /* Увеличенный размер шрифта */
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 32px; /* Увеличенный размер шрифта */
+  font-weight: 500;
 }
 
 ul {
@@ -214,40 +225,69 @@ ul {
 }
 
 li {
-  background-color: #f9f9f9;
-  margin: 5px 0;
-  padding: 10px;
-  border-left: 6px solid #007bff;
+  background-color: #ffffff;
+  margin: 10px 0;
+  padding: 15px;
+  border-left: 4px solid #0088cc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-form {
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-group {
   margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px; /* Увеличенный размер шрифта */
 }
 
 input, textarea {
   width: 100%;
-  padding: 8px;
+  padding: 14px; /* Увеличенные отступы */
   margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
+  font-size: 18px; /* Увеличенный размер шрифта */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button {
-  background-color: #007bff;
+  background-color: #0088cc;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 14px 24px; /* Увеличенные отступы */
+  border-radius: 8px;
+  font-size: 18px; /* Увеличенный размер шрифта */
+  font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #005f99;
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background-color: #0088cc;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+  transform: translateY(-2px);
 }
 
 .card-container {
@@ -257,15 +297,31 @@ button:hover {
 }
 
 .card {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 30px;
   width: 100%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+  .card-container {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 </style>

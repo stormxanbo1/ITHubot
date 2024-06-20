@@ -26,7 +26,7 @@ public class UserScoreService {
             entityManager.persist(userScore);
         } else {
             userScore.setTotalScore(userScore.getTotalScore() + newScore);
-            entityManager.merge(userScore);
+                      entityManager.merge(userScore);
         }
     }
 }

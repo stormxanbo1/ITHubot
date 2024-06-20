@@ -197,6 +197,7 @@ public class AdminController {
     public ResponseEntity getResults(){
         return ResponseEntity.ok(dataAccessLayer.getResults());
     }
+
     @GetMapping("get/test/{id}")
     public ResponseEntity getTestById(@PathVariable("id") long id) {
 
@@ -243,6 +244,15 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given test");
         }
         return ResponseEntity.ok(answers);
+    }
+
+    @GetMapping("/score/{id}")
+    public ResponseEntity<UserScore> getUserScoreByUserId(@PathVariable("id") Long id) {
+        UserScore userScore = dataAccessLayer.getUserScoreByUserId(id);
+        if (userScore == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userScore, HttpStatus.OK);
     }
 
 }
