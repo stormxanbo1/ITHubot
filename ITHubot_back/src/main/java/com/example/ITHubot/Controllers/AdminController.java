@@ -236,6 +236,7 @@ public class AdminController {
         }
         return ResponseEntity.ok(questions);
     }
+
     @GetMapping("get/question/answer/{id}")
     public ResponseEntity<?> getAnswerByQuestionId(@PathVariable("id") Long id) {
         List<Answer> answers = dataAccessLayer.getAnswersByQuestionId(id);
