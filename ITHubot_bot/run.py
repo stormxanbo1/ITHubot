@@ -3,10 +3,13 @@ import logging
 import os
 from aiohttp import ClientSession
 from dotenv import load_dotenv
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
     CallbackQuery
 from aiogram.filters import CommandStart, Command
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.storage.memory import MemoryStorage
 
 # Загрузить переменные среды из файла .env
 load_dotenv()
@@ -14,8 +17,8 @@ load_dotenv()
 # Инициализируйте бота с помощью токена из переменных среды.
 bot = Bot(token=os.getenv('TOKEN'))
 
-# Инициализируйте диспетчер.
-dp = Dispatcher()
+# Инициализируйте диспетчер с FSM и памятью.
+dp = Dispatcher(storage=MemoryStorage())
 
 # Определить кнопки для главного меню бота
 button_tests = KeyboardButton(text='Тесты')
@@ -33,6 +36,13 @@ main_keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+
+
+# Определить состояние FSM
+class TestStates(StatesGroup):
+    SELECTING_TEST = State()
+    IN_TEST = State()
+    SHOW_RESULT = State()
 
 
 # Определите обработчик для команды /start.
@@ -66,7 +76,7 @@ async def get_help(message: Message):
 
 # Определите обработчик для кнопки "Тесты".
 @dp.message(lambda message: message.text == 'Тесты')
-async def handle_tests_button(message: Message):
+async def handle_tests_button(message: Message, state: FSMContext):
     async with ClientSession() as session:
         try:
             async with session.get('http://localhost:3333/admin/get/test') as response:
@@ -85,6 +95,7 @@ async def handle_tests_button(message: Message):
 
                     # Отправка сообщения со списком тестов и инлайн-кнопками
                     await message.answer(f"Список доступных тестов:\n\n{tests_list}", reply_markup=inline_kb)
+                    await state.set_state(TestStates.SELECTING_TEST)
                 else:
                     await message.answer("Произошла ошибка при загрузке списка тестов")
         except Exception as e:
@@ -92,9 +103,9 @@ async def handle_tests_button(message: Message):
             await message.answer("Произошла ошибка при выполнении запроса на сервер")
 
 
-# Обработчик для инлайн-кнопок
+# Обработчик для инлайн-кнопок выбора теста
 @dp.callback_query(lambda callback_query: callback_query.data.startswith("test_"))
-async def handle_test_selection(callback_query: CallbackQuery):
+async def handle_test_selection(callback_query: CallbackQuery, state: FSMContext):
     test_id = callback_query.data.split("_")[1]
 
     async with ClientSession() as session:
@@ -105,16 +116,80 @@ async def handle_test_selection(callback_query: CallbackQuery):
                     selected_test = next((test for test in tests if str(test['testId']) == test_id), None)
 
                     if selected_test:
+                        await state.update_data(test_id=test_id, current_question=0, answers=[],
+                                                selected_test=selected_test)
+
                         await callback_query.message.answer(
-                            f"Вы выбрали тест:\n\nНазвание: {selected_test['title']}\nОписание: {selected_test['description']}")
+                            f"Вы выбрали тест:\n\nНазвание: {selected_test['title']}\nОписание: {selected_test['description']}\nНачнем тестирование!"
+                        )
+                        await state.set_state(TestStates.IN_TEST)
+                        await ask_question(callback_query.message, state)
                     else:
                         await callback_query.message.answer("Произошла ошибка при выборе теста")
+                else:
+                    await callback_query.message.answer("Произошла ошибка при загрузке списка тестов")
         except Exception as e:
             logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
             await callback_query.message.answer("Произошла ошибка при выполнении запроса на сервер")
-
-    # Ответ на callback_query, чтобы убрать часы ожидания
     await callback_query.answer()
+
+
+# Функция для получения и отправки вопроса
+async def ask_question(message: Message, state: FSMContext):
+    data = await state.get_data()
+    test_id = data['test_id']
+    current_question = data['current_question']
+
+    async with ClientSession() as session:
+        try:
+            async with session.get(f'http://localhost:3333/admin/get/question/{test_id}') as response:
+                if response.status == 200:
+                    questions = await response.json()
+                    if current_question < len(questions):
+                        question = questions[current_question]
+                        await state.update_data(questions=questions)
+                        buttons = [InlineKeyboardButton(text=option, callback_data=f"answer_{option}") for option in
+                                   question['options']]
+                        inline_kb = InlineKeyboardMarkup(inline_keyboard=[buttons])
+
+                        await message.answer(f"Вопрос {current_question + 1}: {question['text']}",
+                                             reply_markup=inline_kb)
+                    else:
+                        await show_result(message, state)
+                else:
+                    await message.answer("Произошла ошибка при загрузке вопросов теста")
+        except Exception as e:
+            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
+            await message.answer("Произошла ошибка при выполнении запроса на сервер")
+
+
+# Обработчик для инлайн-кнопок выбора ответа
+@dp.callback_query(lambda callback_query: callback_query.data.startswith("answer_"))
+async def handle_answer_selection(callback_query: CallbackQuery, state: FSMContext):
+    answer = callback_query.data.split("_")[1]
+    data = await state.get_data()
+    answers = data['answers']
+    answers.append(answer)
+    current_question = data['current_question'] + 1
+    await state.update_data(answers=answers, current_question=current_question)
+
+    await callback_query.answer()
+    await ask_question(callback_query.message, state)
+
+
+# Функция для показа результата
+async def show_result(message: Message, state: FSMContext):
+    data = await state.get_data()
+    answers = data['answers']
+    questions = data['questions']
+
+    correct_answers = sum(1 for i, question in enumerate(questions) if question['correct_answer'] == answers[i])
+    total_questions = len(questions)
+    score = (correct_answers / total_questions) * 100
+
+    await message.answer(
+        f"Тест завершен! Ваш результат: {correct_answers} из {total_questions} правильных ответов ({score:.2f}%).")
+    await state.set_state(TestStates.SHOW_RESULT)
 
 
 # Основная функция для запуска бота
