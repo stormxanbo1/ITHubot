@@ -1,99 +1,99 @@
 <template>
-    <div>
-      <Header />
-      <div class="container">
-        <h1>Список пользователей</h1>
-        <table>
-          <thead>
-            <tr>
-              <th @click="sortUsers('username')">Имя пользователя</th>
-              <th @click="sortUsers('totalScore')">Баллы</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in sortedUsers" :key="user.userId">
-              <td>{{ user.username }}</td>
-              <td>{{ user.totalScore }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div>
+    <Header />
+    <div class="container">
+      <h1>Список пользователей</h1>
+      <table>
+        <thead>
+          <tr>
+            <th @click="sortUsers('username')">Имя пользователя</th>
+            <th @click="sortUsers('totalScore')">Баллы</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="user in sortedUsers" :key="user.userId">
+            <td>{{ user.username }}</td>
+            <td>{{ user.totalScore }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref, computed, onMounted } from 'vue';
-  import Header from '@/components/Header.vue';
-  import api from '@/api.js';
-  
-  const users = ref([]);
-  const sortKey = ref('totalScore');
-  const sortOrder = ref('desc');
-  
-  const fetchUsers = async () => {
-  try {
-    const response = await api.get('/main/get/users', {
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import Header from '@/components/Header.vue';
+import api from '@/api.js';
+
+const users = ref([]);
+const sortKey = ref('totalScore');
+const sortOrder = ref('desc');
+
+const fetchUsers = async () => {
+try {
+  const response = await api.get('/main/get/users', {
+    headers: {
+      'Authorization': 'Bearer ' + $cookies.get('jwt')
+    }
+  });
+  console.log(response.data)
+  // После получения пользователей, загрузите их баллы через API вызов
+  for (const user of response.data) {
+    const userScoreResponse = await api.get(`/admin/score/${user.userId}`, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    console.log(response.data)
-    // После получения пользователей, загрузите их баллы через API вызов
-    for (const user of response.data) {
-      const userScoreResponse = await api.get(`/admin/score/${user.userId}`, {
-        headers: {
-          'Authorization': 'Bearer ' + $cookies.get('jwt')
-        }
-      });
-      user.totalScore = userScoreResponse.data.totalScore;
-    }
-    users.value = response.data;
-  } catch (error) {
-    console.error(error);
+    user.totalScore = userScoreResponse.data.totalScore;
   }
+  users.value = response.data;
+} catch (error) {
+  console.error(error);
+}
 };
 
-  
+
 const sortUsers = (key) => {
-  sortKey.value = key;
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+sortKey.value = key;
+sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
 
-  users.value.sort((a, b) => {
-    let aValue, bValue;
-    if (key === 'totalScore') {
-      aValue = a.totalScore;
-      bValue = b.totalScore;
-    } else {
-      // Дополнительные условия для других полей, если требуется
-      aValue = a[key];
-      bValue = b[key];
-    }
+users.value.sort((a, b) => {
+  let aValue, bValue;
+  if (key === 'totalScore') {
+    aValue = a.totalScore;
+    bValue = b.totalScore;
+  } else {
+    // Дополнительные условия для других полей, если требуется
+    aValue = a[key];
+    bValue = b[key];
+  }
 
+  let result = 0;
+  if (aValue < bValue) {
+    result = -1;
+  } else if (aValue > bValue) {
+    result = 1;
+  }
+  return sortOrder.value === 'asc' ? result : -result;
+});
+};
+
+
+const sortedUsers = computed(() => {
+  return [...users.value].sort((a, b) => {
     let result = 0;
-    if (aValue < bValue) {
+    if (a[sortKey.value] < b[sortKey.value]) {
       result = -1;
-    } else if (aValue > bValue) {
+    } else if (a[sortKey.value] > b[sortKey.value]) {
       result = 1;
     }
     return sortOrder.value === 'asc' ? result : -result;
   });
-};
+});
 
-  
-  const sortedUsers = computed(() => {
-    return [...users.value].sort((a, b) => {
-      let result = 0;
-      if (a[sortKey.value] < b[sortKey.value]) {
-        result = -1;
-      } else if (a[sortKey.value] > b[sortKey.value]) {
-        result = 1;
-      }
-      return sortOrder.value === 'asc' ? result : -result;
-    });
-  });
-  
-  onMounted(fetchUsers);
-  </script>
+onMounted(fetchUsers);
+</script>
   
   <style scoped>
   .container {

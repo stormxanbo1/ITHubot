@@ -46,29 +46,30 @@ public class MainController {
     }
 
 //////////////////////////////////
-@PostMapping("/create/result")
-public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) {
-    User user = dataAccessLayer.getUserById(resultRequest.getUserId());
-    if (user == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    @PostMapping("/create/result")
+    public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) {
+        User user = dataAccessLayer.getUserById(resultRequest.getUserId());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        Test test = dataAccessLayer.getTestById(resultRequest.getTestId());
+        if (test == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found");
+        }
+
+        int score = testEvaluationService.calculateScore(test, resultRequest.getUserAnswers());
+
+        Result result = new Result();
+        result.setUser(user);
+        result.setTest(test);
+        result.setScore(score);
+        result.setCompletedAt(new Date());
+
+        dataAccessLayer.createResult(result);
+        userScoreService.updateUserScore(user, score);
+
+        return ResponseEntity.ok("Result created successfully");
     }
 
-    Test test = dataAccessLayer.getTestById(resultRequest.getTestId());
-    if (test == null) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found");
-    }
-
-    int score = testEvaluationService.calculateScore(test, resultRequest.getUserAnswers());
-
-    Result result = new Result();
-    result.setUser(user);
-    result.setTest(test);
-    result.setScore(score);
-    result.setCompletedAt(new Date());
-
-    dataAccessLayer.createResult(result);
-    userScoreService.updateUserScore(user, score);
-
-    return ResponseEntity.ok("Result created successfully");
-}
 }
