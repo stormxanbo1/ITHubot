@@ -37,6 +37,7 @@
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
+    console.log(response.data)
     // После получения пользователей, загрузите их баллы через API вызов
     for (const user of response.data) {
       const userScoreResponse = await api.get(`/admin/${user.userId}/score`, {

@@ -450,7 +450,8 @@ public class DataAccessLayer {
         }
     }
 
-    public UserScore getUserScoreByUserId(Long userId) {
+//    @Transactional
+    public UserScore getUserScoreByUserId(Long id) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
@@ -459,7 +460,7 @@ public class DataAccessLayer {
             Root<UserScore> root = query.from(UserScore.class);
 
             // Условие для выбора UserScore по userId
-            query.select(root).where(builder.equal(root.get("user").get("userId"), userId));
+            query.select(root).where(builder.equal(root.get("user").get("userId"), id));
 
             UserScore userScore = session.createQuery(query).uniqueResult();
 
