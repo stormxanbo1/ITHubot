@@ -4,9 +4,15 @@ import os
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
+<<<<<<< Updated upstream
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
 from aiogram.filters import CommandStart, Command
 from aiogram.types import CallbackQuery
+=======
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
+    CallbackQuery
+from aiogram.filters import CommandStart, Command
+>>>>>>> Stashed changes
 
 # Загрузить переменные среды из файла .env
 load_dotenv()
@@ -69,12 +75,54 @@ async def handle_tests_button(message: Message):
             async with session.get('http://localhost:3333/admin/get/test') as response:
                 if response.status == 200:
                     tests = await response.json()
+<<<<<<< Updated upstream
                     logging.info(f"Полученные данные: {tests}")
 
                     inline_keyboard = InlineKeyboardMarkup(row_width=2)
                     for test in tests:
                         test_button = InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}")
                         inline_keyboard.add(test_button)
+=======
+                    logging.info(f"Полученные данные: {tests}")  # Логирование полного JSON-ответа
+
+                    # Создание инлайн-кнопок для каждого теста
+                    buttons = [InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}") for test
+                               in tests]
+                    inline_kb = InlineKeyboardMarkup(inline_keyboard=[buttons])
+
+                    # Отправка сообщения со списком тестов и инлайн-кнопками
+                    await message.answer("Список доступных тестов:", reply_markup=inline_kb)
+                else:
+                    await message.answer("Произошла ошибка при загрузке списка тестов")
+        except Exception as e:
+            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
+            await message.answer("Произошла ошибка при выполнении запроса на сервер")
+
+
+# Обработчик для инлайн-кнопок
+@dp.callback_query(lambda callback_query: callback_query.data.startswith("test_"))
+async def handle_test_selection(callback_query: CallbackQuery):
+    test_id = callback_query.data.split("_")[1]
+
+    async with ClientSession() as session:
+        try:
+            async with session.get(f'http://localhost:3333/admin/get/test') as response:
+                if response.status == 200:
+                    tests = await response.json()
+                    selected_test = next((test for test in tests if str(test['testId']) == test_id), None)
+
+                    if selected_test:
+                        await callback_query.message.answer(
+                            f"Вы выбрали тест:\n\nНазвание: {selected_test['title']}\nОписание: {selected_test['description']}")
+                    else:
+                        await callback_query.message.answer("Произошла ошибка при выборе теста")
+        except Exception as e:
+            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
+            await callback_query.message.answer("Произошла ошибка при выполнении запроса на сервер")
+
+    # Ответ на callback_query, чтобы убрать часы ожидания
+    await callback_query.answer()
+>>>>>>> Stashed changes
 
                     # Отправьте сообщение с инлайн кнопками и удалите реплай кнопки
                     await message.answer("Выберите тест:", reply_markup=inline_keyboard)
