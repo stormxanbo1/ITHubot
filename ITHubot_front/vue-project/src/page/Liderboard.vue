@@ -2,7 +2,7 @@
     <div>
       <Header />
       <div class="container">
-        <h1>Список Лидеров</h1>
+        <h1>Список пользователей</h1>
         <table>
           <thead>
             <tr>
@@ -13,7 +13,7 @@
           <tbody>
             <tr v-for="user in sortedUsers" :key="user.userId">
               <td>{{ user.username }}</td>
-              <td :class="{ 'green-text': user.totalScore > 100 }">{{ user.totalScore }}</td>
+              <td>{{ user.totalScore }}</td>
             </tr>
           </tbody>
         </table>
@@ -31,48 +31,63 @@
   const sortOrder = ref('desc');
   
   const fetchUsers = async () => {
-    try {
-      const response = await api.get('/main/get/users', {
+  try {
+    const response = await api.get('/main/get/users', {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    console.log(response.data)
+    // После получения пользователей, загрузите их баллы через API вызов
+    for (const user of response.data) {
+      const userScoreResponse = await api.get(`/admin/score/${user.userId}`, {
         headers: {
           'Authorization': 'Bearer ' + $cookies.get('jwt')
         }
       });
-  
-      // Load user scores
-      for (const user of response.data) {
-        const userScoreResponse = await api.get(`/admin/score/${user.userId}`, {
-          headers: {
-            'Authorization': 'Bearer ' + $cookies.get('jwt')
-          }
-        });
-        user.totalScore = userScoreResponse.data.totalScore;
-      }
-  
-      users.value = response.data;
-    } catch (error) {
-      console.error(error);
+      user.totalScore = userScoreResponse.data.totalScore;
     }
-  };
+    users.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   
-  const sortUsers = (key) => {
-    sortKey.value = key;
-    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
-  
-    users.value.sort((a, b) => {
-      let aValue = key === 'totalScore' ? a.totalScore : a[key];
-      let bValue = key === 'totalScore' ? b.totalScore : b[key];
-  
-      let result = aValue < bValue ? -1 : (aValue > bValue ? 1 : 0);
-      return sortOrder.value === 'asc' ? result : -result;
-    });
-  };
+const sortUsers = (key) => {
+  sortKey.value = key;
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+
+  users.value.sort((a, b) => {
+    let aValue, bValue;
+    if (key === 'totalScore') {
+      aValue = a.totalScore;
+      bValue = b.totalScore;
+    } else {
+      // Дополнительные условия для других полей, если требуется
+      aValue = a[key];
+      bValue = b[key];
+    }
+
+    let result = 0;
+    if (aValue < bValue) {
+      result = -1;
+    } else if (aValue > bValue) {
+      result = 1;
+    }
+    return sortOrder.value === 'asc' ? result : -result;
+  });
+};
+
   
   const sortedUsers = computed(() => {
     return [...users.value].sort((a, b) => {
-      let aValue = sortKey.value === 'totalScore' ? a.totalScore : a[sortKey.value];
-      let bValue = sortKey.value === 'totalScore' ? b.totalScore : b[sortKey.value];
-  
-      let result = aValue < bValue ? -1 : (aValue > bValue ? 1 : 0);
+      let result = 0;
+      if (a[sortKey.value] < b[sortKey.value]) {
+        result = -1;
+      } else if (a[sortKey.value] > b[sortKey.value]) {
+        result = 1;
+      }
       return sortOrder.value === 'asc' ? result : -result;
     });
   });
@@ -82,73 +97,37 @@
   
   <style scoped>
   .container {
-    max-width: 900px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   h1 {
     text-align: center;
     color: #333;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
   }
   
   table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
   th, td {
-    padding: 15px;
+    padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
   }
   
   th {
     cursor: pointer;
-    background-color: #f5f5f5;
-    color: #333;
-    font-weight: bold;
   }
   
   th:hover {
-    background-color: #e0e0e0;
-  }
-  
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .green-text {
-    color: green;
-    font-weight: bold;
-  }
-  
-  @media (max-width: 768px) {
-    .container {
-      padding: 15px;
-    }
-  
-    h1 {
-      font-size: 2rem;
-    }
-  
-    table {
-      font-size: 0.9rem;
-    }
-  
-    th, td {
-      padding: 10px;
-    }
+    background-color: #f1f1f1;
   }
   </style>
   
