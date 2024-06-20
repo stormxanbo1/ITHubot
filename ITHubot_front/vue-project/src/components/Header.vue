@@ -25,30 +25,30 @@ export default {
     leaderboard(){
       window.location.href = '/lead';
     },
-    async fetchUserData() {
-      const token = this.$cookies.get('jwt'); 
-      const decodedToken = jwt_decode.decode(token);
-      if (decodedToken) {
-        this.userId = decodedToken.id;
-        try {
-          const response = await api.get('/admin/get/user/' + this.userId, {
-            headers: {
-              'Authorization': 'Bearer ' + token
-            }
-          });
-          this.user.name = response.data.username;
-        } catch (error) {
-          console.error('Ошибка при получении данных:', error);
-        }
-      } else {
-        console.log('Неверный токен');
-      }
-    }
-  },
-  mounted() {
-    this.fetchUserData();
-  }
-};
+  //   async fetchUserData() {
+  //     const token = this.$cookies.get('jwt'); 
+  //     const decodedToken = jwt_decode.decode(token);
+  //     if (decodedToken) {
+  //       this.userId = decodedToken.id;
+  //       try {
+  //         const response = await api.get('/admin/get/user/' + this.userId, {
+  //           headers: {
+  //             'Authorization': 'Bearer ' + token
+  //           }
+  //         });
+  //         this.user.name = response.data.username;
+  //       } catch (error) {
+  //         console.error('Ошибка при получении данных:', error);
+  //       }
+  //     } else {
+  //       console.log('Неверный токен');
+  //     }
+  //   }
+  // },
+  // mounted() {
+  //   this.fetchUserData();
+  // }
+}};
 </script>
 
 <template>
