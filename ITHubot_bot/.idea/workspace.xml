@@ -31,15 +31,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-<<<<<<< Updated upstream
     "git-widget-placeholder": "bot",
     "last_opened_file_path": "C:/Users/SystemX/Desktop/v1",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
-=======
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/SystemX/Desktop/v1",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
->>>>>>> Stashed changes
   }
 }]]></component>
   <component name="RunManager">

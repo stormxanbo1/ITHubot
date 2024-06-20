@@ -4,15 +4,9 @@ import os
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-<<<<<<< Updated upstream
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardRemove
-from aiogram.filters import CommandStart, Command
-from aiogram.types import CallbackQuery
-=======
 from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton, \
     CallbackQuery
 from aiogram.filters import CommandStart, Command
->>>>>>> Stashed changes
 
 # Загрузить переменные среды из файла .env
 load_dotenv()
@@ -33,12 +27,13 @@ button_help = KeyboardButton(text='Помощь')
 main_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [button_tests],
-        [button_results],
         [button_rating],
+        [button_results],
         [button_help]
     ],
     resize_keyboard=True
 )
+
 
 # Определите обработчик для команды /start.
 @dp.message(CommandStart())
@@ -49,6 +44,7 @@ async def cmd_start(message: Message):
         "Для получения справки используйте кнопку 'Помощь'.",
         reply_markup=main_keyboard  # Отправьте клавиатуру главного меню с сообщением
     )
+
 
 # Определите обработчик для команды /help.
 @dp.message(Command('help'))
@@ -67,6 +63,7 @@ async def get_help(message: Message):
         "- Получи результаты и узнай, насколько хорошо ты справился!"
     )
 
+
 # Определите обработчик для кнопки "Тесты".
 @dp.message(lambda message: message.text == 'Тесты')
 async def handle_tests_button(message: Message):
@@ -75,15 +72,11 @@ async def handle_tests_button(message: Message):
             async with session.get('http://localhost:3333/admin/get/test') as response:
                 if response.status == 200:
                     tests = await response.json()
-<<<<<<< Updated upstream
-                    logging.info(f"Полученные данные: {tests}")
-
-                    inline_keyboard = InlineKeyboardMarkup(row_width=2)
-                    for test in tests:
-                        test_button = InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}")
-                        inline_keyboard.add(test_button)
-=======
                     logging.info(f"Полученные данные: {tests}")  # Логирование полного JSON-ответа
+
+                    # Создание текста для списка тестов
+                    tests_list = "\n\n".join(
+                        [f"Название: {test['title']}\nОписание: {test['description']}" for test in tests])
 
                     # Создание инлайн-кнопок для каждого теста
                     buttons = [InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}") for test
@@ -91,7 +84,7 @@ async def handle_tests_button(message: Message):
                     inline_kb = InlineKeyboardMarkup(inline_keyboard=[buttons])
 
                     # Отправка сообщения со списком тестов и инлайн-кнопками
-                    await message.answer("Список доступных тестов:", reply_markup=inline_kb)
+                    await message.answer(f"Список доступных тестов:\n\n{tests_list}", reply_markup=inline_kb)
                 else:
                     await message.answer("Произошла ошибка при загрузке списка тестов")
         except Exception as e:
@@ -122,45 +115,13 @@ async def handle_test_selection(callback_query: CallbackQuery):
 
     # Ответ на callback_query, чтобы убрать часы ожидания
     await callback_query.answer()
->>>>>>> Stashed changes
 
-                    # Отправьте сообщение с инлайн кнопками и удалите реплай кнопки
-                    await message.answer("Выберите тест:", reply_markup=inline_keyboard)
-                    await message.answer("Реплай кнопки скрыты.", reply_markup=ReplyKeyboardRemove())
-                else:
-                    await message.answer("Произошла ошибка при загрузке списка тестов")
-        except Exception as e:
-            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
-            await message.answer("Произошла ошибка при выполнении запроса на сервер")
-
-# Обработчик для инлайн-кнопок
-@dp.callback_query()
-async def handle_test_selection(callback_query: CallbackQuery):
-    test_id = callback_query.data.split("_")[1]
-    async with ClientSession() as session:
-        try:
-            # Делаем запрос на сервер для получения информации о выбранном тесте
-            async with session.get(f'http://localhost:3333/admin/get/test/{test_id}') as response:
-                if response.status == 200:
-                    test_info = await response.json()
-                    test_title = test_info.get('title', 'Название теста')
-                    test_description = test_info.get('description', 'Описание теста')
-
-                    # Отправляем информацию о тесте пользователю
-                    await callback_query.message.answer(f"Тест: **{test_title}**\nОписание: **{test_description}**")
-                else:
-                    await callback_query.message.answer("Произошла ошибка при загрузке информации о тесте")
-        except Exception as e:
-            logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
-            await callback_query.message.answer("Произошла ошибка при выполнении запроса на сервер")
-
-    # Ответ на callback_query, чтобы убрать часы ожидания
-    await callback_query.answer()
 
 # Основная функция для запуска бота
 async def main():
     # Начать опрос обновлений из Telegram
     await dp.start_polling(bot)
+
 
 # Точка входа в сценарий
 if __name__ == '__main__':
