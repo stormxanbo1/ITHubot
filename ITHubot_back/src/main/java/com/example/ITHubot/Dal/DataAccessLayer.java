@@ -389,6 +389,7 @@ public class DataAccessLayer {
     }
 
     //////////////////////////////////////////////////////////////
+    @Transactional
     public List<Question> getQuestionsByTest(Test test) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -402,7 +403,7 @@ public class DataAccessLayer {
         return questions;
     }
 
-
+    @Transactional
     public Long getCorrectAnswerIdByQuestion(Question question) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -413,7 +414,7 @@ public class DataAccessLayer {
         session.close();
         return correctAnswerId;
     }
-
+    @Transactional
     public List<Question> getQuestionsByTestID(Long id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
@@ -426,7 +427,7 @@ public class DataAccessLayer {
         session.close();
         return questions;
     }
-
+    @Transactional
     public List<Answer> getAnswersByQuestionId(Long id) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
@@ -450,7 +451,7 @@ public class DataAccessLayer {
         }
     }
 
-//    @Transactional
+    @Transactional
     public UserScore getUserScoreByUserId(Long id) {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();

@@ -245,8 +245,8 @@ public class AdminController {
         return ResponseEntity.ok(answers);
     }
 
-    @GetMapping("score/{id}")
-    public ResponseEntity<UserScore> getUserScoreByUserId(@PathVariable Long id) {
+    @GetMapping("/score/{id}")
+    public ResponseEntity<UserScore> getUserScoreByUserId(@PathVariable("id") Long id) {
         UserScore userScore = dataAccessLayer.getUserScoreByUserId(id);
         if (userScore == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
