@@ -5,10 +5,76 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9e8ef6ed-31b7-42d2-a109-aa918512c3fe" name="Changes" comment="">
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/resources/application.properties" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/ITHubot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/ITHubot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/DataConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/DataConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/JpaConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/JpaConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Configuration/SecurityConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/SecurityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Controllers/SecurityController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dal/DataAccessLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dal/DataAccessLayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/ResultRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/ResultRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/SigninRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/SigninRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/SignupRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Dto/SignupRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/ItHubotApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/ItHubotApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Answer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Answer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Question.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/UserScore.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Models/UserScore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/JwtCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/JwtCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/TokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/TokenFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/UserDetailsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Security/UserDetailsImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/TestEvaluationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/TestEvaluationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/UserDetailsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/UserDetailsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/UserScoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/java/com/example/ITHubot/Service/UserScoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_back/src/test/java/com/example/ITHubot/ItHubotApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_back/src/test/java/com/example/ITHubot/ItHubotApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/ITHubot_bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ITHubot_bot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+>>>>>>> Stashed changes
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/api.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/.vscode/extensions.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/.vscode/extensions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/jsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/jsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/components/Heder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/components/Heder.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Liderboard.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Liderboard.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/LogPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/LogPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Main.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Main.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/RegPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/RegPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Test.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/page/Test.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/src/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ITHubot_front/vue-project/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ITHubot_front/vue-project/vite.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,14 +96,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+<<<<<<< Updated upstream
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/SystemX/Desktop/v1&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/SystemX/Desktop/v1",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+>>>>>>> Stashed changes
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ITHubot_bot" />
