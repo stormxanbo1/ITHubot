@@ -33,7 +33,7 @@ export default {
     },
 
     liderboard(){
-      
+      window.location.href = '/lead';
     }
     
     
@@ -89,8 +89,9 @@ export default {
     </div>
     <div class="buttons">
       <button @click="mainMenu()">Список тестов</button>
-      
+      <button @click="liderboard()">Список Лидеров</button>
       <button @click="tgHref()">Телеграмм Бот</button>
+      
       
      
     </div>
