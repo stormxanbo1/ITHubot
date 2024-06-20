@@ -194,25 +194,29 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  background-color: #f9f9f9;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 h1 {
-  text-align: center;
-  color: #333;
-  font-size: 32px;
-  margin-bottom: 20px;
+  font-size: 42px; /* Увеличенный размер шрифта */
+  font-weight: 700;
 }
 
 h3 {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 32px; /* Увеличенный размер шрифта */
+  font-weight: 500;
 }
 
 ul {
@@ -221,53 +225,61 @@ ul {
 }
 
 li {
-  background-color: #f9f9f9;
-  margin: 5px 0;
-  padding: 10px;
-  border-left: 4px solid #007bff;
+  background-color: #ffffff;
+  margin: 10px 0;
+  padding: 15px;
+  border-left: 4px solid #0088cc;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .form-section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold;
-  color: #333;
+  color: #555;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px; /* Увеличенный размер шрифта */
 }
 
 input, textarea {
   width: 100%;
-  padding: 10px;
+  padding: 14px; /* Увеличенные отступы */
   margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 18px; /* Увеличенный размер шрифта */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button {
-  background-color: #007bff;
+  background-color: #0088cc;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 14px 24px; /* Увеличенные отступы */
+  border-radius: 8px;
+  font-size: 18px; /* Увеличенный размер шрифта */
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #005f99;
   transform: translateY(-2px);
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #0088cc;
 }
 
 .btn-secondary {
@@ -285,11 +297,17 @@ button:hover {
 }
 
 .card {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 30px;
   width: 100%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .card-body {
