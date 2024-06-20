@@ -17,6 +17,7 @@ public class UserScoreService {
 
     @Transactional
     public void updateUserScore(User user, int newScore) {
+        user = entityManager.merge(user);
         UserScore userScore = entityManager.find(UserScore.class, user.getUserId());
         if (userScore == null) {
             userScore = new UserScore();

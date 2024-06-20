@@ -315,15 +315,34 @@ public class DataAccessLayer {
         List<Test> resultList = session.createQuery(query).getResultList();
         return resultList;
     }
-    public void createUserScore(UserScore userScore){
+    public void createUserScore(UserScore userScore) {
         session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.persist(userScore);
-        session.getTransaction().commit();
-        if (session != null) {
-            session.close();
+        try {
+            session.beginTransaction();
+
+            // Merge the user entity to attach it to the current session
+            User user = userScore.getUser();
+            if (user != null && user.getUserId() != null) {
+                user = session.merge(user);
+                userScore.setUser(user);
+            }
+
+            // Persist the UserScore entity
+            session.persist(userScore);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
         }
     }
+
 
     public void deleteUserScoreById(Long id){
         session = sessionFactory.openSession();

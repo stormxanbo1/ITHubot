@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import Header from '@/components/Heder.vue';
+import Header from '@/components/Header.vue';
 import api from '@/api.js';
 
 const test = ref(null);
