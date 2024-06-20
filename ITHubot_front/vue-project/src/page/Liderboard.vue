@@ -31,26 +31,54 @@
   const sortOrder = ref('desc');
   
   const fetchUsers = async () => {
-    try {
-      const response = await api.get('main/get/users', {
+  try {
+    const response = await api.get('/main/get/users', {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    console.log(response.data)
+    // После получения пользователей, загрузите их баллы через API вызов
+    for (const user of response.data) {
+      const userScoreResponse = await api.get(`/admin/${user.userId}/score`, {
         headers: {
           'Authorization': 'Bearer ' + $cookies.get('jwt')
         }
       });
-      users.value = response.data;
-    } catch (error) {
-      console.error(error);
+      user.totalScore = userScoreResponse.data.totalScore;
     }
-  };
+    users.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   
-  const sortUsers = (key) => {
-    if (sortKey.value === key) {
-      sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+const sortUsers = (key) => {
+  sortKey.value = key;
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+
+  users.value.sort((a, b) => {
+    let aValue, bValue;
+    if (key === 'totalScore') {
+      aValue = a.totalScore;
+      bValue = b.totalScore;
     } else {
-      sortKey.value = key;
-      sortOrder.value = 'asc';
+      // Дополнительные условия для других полей, если требуется
+      aValue = a[key];
+      bValue = b[key];
     }
-  };
+
+    let result = 0;
+    if (aValue < bValue) {
+      result = -1;
+    } else if (aValue > bValue) {
+      result = 1;
+    }
+    return sortOrder.value === 'asc' ? result : -result;
+  });
+};
+
   
   const sortedUsers = computed(() => {
     return [...users.value].sort((a, b) => {

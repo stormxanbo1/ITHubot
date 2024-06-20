@@ -6,6 +6,7 @@ import com.example.ITHubot.Models.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -295,6 +296,7 @@ public class DataAccessLayer {
             session.close();
         }
     }
+    @Transactional
     public Test getTestById(Long id){
         session = sessionFactory.openSession();
         session.beginTransaction();
@@ -447,6 +449,30 @@ public class DataAccessLayer {
             return null;
         }
     }
+
+//    @Transactional
+    public UserScore getUserScoreByUserId(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<UserScore> query = builder.createQuery(UserScore.class);
+            Root<UserScore> root = query.from(UserScore.class);
+
+            // Условие для выбора UserScore по userId
+            query.select(root).where(builder.equal(root.get("user").get("userId"), id));
+
+            UserScore userScore = session.createQuery(query).uniqueResult();
+
+            session.getTransaction().commit();
+            return userScore;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
 
 }
