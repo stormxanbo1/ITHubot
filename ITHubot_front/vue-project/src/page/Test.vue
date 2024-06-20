@@ -5,9 +5,9 @@ import Header from '@/components/Heder.vue';
 import api from '@/api.js';
 
 const test = ref(null);
-const questions = ref(null);
-const answers = ref(null);
-const route = useRoute(); // New ref for answers
+const questions = ref([]);
+const route = useRoute(); 
+
 const newQuestion = ref({
   test: {
     testId: route.params.id
@@ -16,12 +16,10 @@ const newQuestion = ref({
 });
 
 const newAnswer = ref({
-  question: null, // Will be set dynamically
+  question: null, 
   content: '',
   isCorrect: false,
 });
-
-
 
 const fetchTestDetail = async () => {
   const id = route.params.id;
@@ -46,6 +44,9 @@ const fetchQuestionDetail = async () => {
       }
     });
     questions.value = response.data;
+    await Promise.all(questions.value.map(async (question) => {
+      question.answers = await fetchAnswersForQuestion(question.questionId);
+    }));
   } catch (error) {
     console.error(error);
   }
@@ -53,21 +54,22 @@ const fetchQuestionDetail = async () => {
 
 const fetchAnswersForQuestion = async (questionId) => {
   try {
-    const response = await api.get(`/admin/get/answer?questionId=${questionId}`, {
+    const response = await api.get(`/admin/get/question/answer/${questionId}`, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    answers.value = response.data;
+    return response.data;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
 const updateTestDetail = async () => {
   const id = route.params.id;
   try {
-    const response = await api.post(`/admin/update/test/${id}`, test.value, {
+    await api.post(`/admin/update/test/${id}`, test.value, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
@@ -80,7 +82,7 @@ const updateTestDetail = async () => {
 
 const updateQuestionDetail = async (question) => {
   try {
-    const response = await api.post(`/admin/update/question/${question.questionId}`, question, {
+    await api.post(`/admin/update/question/${question.questionId}`, question, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
@@ -92,30 +94,30 @@ const updateQuestionDetail = async (question) => {
 };
 
 const addQuestion = async () => {
-  const id = route.params.id;
   try {
-    const response = await api.post(`/admin/create/question`, newQuestion.value, {
+    await api.post(`/admin/create/question`, newQuestion.value, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
-    newQuestion.value = { test: {testId: route.params.id}, content: '' };
-    window.location.reload();
+    newQuestion.value = { test: { testId: route.params.id }, content: '' };
+    fetchQuestionDetail();
   } catch (error) {
     console.error(error);
   }
 };
 
 const addAnswer = async (questionId) => {
-  newAnswer.value.question = questions.value.find(q => q.questionId === questionId);
+  const question = questions.value.find(q => q.questionId === questionId);
+  newAnswer.value.question = { questionId: question.questionId }; // Устанавливаем только ID вопроса
   try {
-    const response = await api.post(`/admin/create/answer`, newAnswer.value, {
+    await api.post(`/admin/create/answer`, newAnswer.value, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
     });
     newAnswer.value = { question: null, content: '', isCorrect: false };
-    fetchAnswersForQuestion(questionId); // Reload answers for the current question
+    question.answers = await fetchAnswersForQuestion(questionId); // Reload answers for the current question
   } catch (error) {
     console.error(error);
   }
@@ -125,8 +127,8 @@ onMounted(() => {
   fetchTestDetail();
   fetchQuestionDetail();
 });
-
 </script>
+
 
 <template>
   <div>
@@ -144,12 +146,7 @@ onMounted(() => {
         </div>
         <button type="submit">Сохранить изменения</button>
       </form>
-      
-      <h3>Упражнения</h3>
-      <ul>
-        <!-- <li v-for="exercise in training.exercises" :key="exercise.id">{{ exercise.name }}</li> -->
-      </ul>
-      
+
       <div class="card-container">
         <div class="card" v-for="question in questions" :key="question.questionId">
           <form @submit.prevent="updateQuestionDetail(question)">
@@ -159,7 +156,7 @@ onMounted(() => {
               
               <h4>Ответы на вопрос</h4>
               <ul>
-                <li v-for="answer in answers" :key="answer.answerId">{{ answer.content }}</li>
+                <li v-for="answer in question.answers" :key="answer.answerId">{{ answer.content }}</li>
               </ul>
               
               <h5>Добавить новый ответ</h5>
@@ -189,12 +186,12 @@ onMounted(() => {
           <label for="new-content">Новый вопрос</label>
           <input id="new-content" v-model="newQuestion.content" type="text" required />
         </div>
-        
         <button type="submit">Добавить вопрос</button>
       </form>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 .container {

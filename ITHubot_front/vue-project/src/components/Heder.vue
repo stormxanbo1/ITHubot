@@ -31,6 +31,10 @@ export default {
     tgHref(){
       window.location.href = 'https://t.me/ITHubbbbot';
     },
+
+    liderboard(){
+      
+    }
     
     
   },

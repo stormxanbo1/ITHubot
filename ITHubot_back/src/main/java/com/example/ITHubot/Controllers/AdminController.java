@@ -222,8 +222,8 @@ public class AdminController {
 
     @GetMapping("get/answer/{id}")
     public ResponseEntity getAnswerById(@PathVariable("id") long id) {
-        dataAccessLayer.getAnswerById(id);
-        return ResponseEntity.ok("User updated!");
+
+        return ResponseEntity.ok(dataAccessLayer.getAnswerById(id));
     }
     /////////////////////////////////////////////////////////
 
@@ -234,6 +234,14 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given test");
         }
         return ResponseEntity.ok(questions);
+    }
+    @GetMapping("get/question/answer/{id}")
+    public ResponseEntity<?> getAnswerByQuestionId(@PathVariable("id") Long id) {
+        List<Answer> answers = dataAccessLayer.getAnswersByQuestionId(id);
+        if (answers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No questions found for the given test");
+        }
+        return ResponseEntity.ok(answers);
     }
 
 }
