@@ -25,6 +25,7 @@ import api from '@/api.js';
 const tests = ref(null);
 const route = useRoute();
 
+
 const TestCreater = async () => {
   const TestData = {
     title: "Test Name",
@@ -45,7 +46,7 @@ const TestCreater = async () => {
 
 const fetchTestsDetail = async () => {
   try {
-    const response = await api.get('/admin/get/test', {
+    const response = await api.get('/main/get/test', {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
@@ -56,6 +57,20 @@ const fetchTestsDetail = async () => {
     console.error('Ошибка при получении данных:', error);
   }
 };
+ 
+const DeleteTest = acync() =>{
+  try {
+    const response = await api.get('/admin/delete/test', {
+      headers: {
+        'Authorization': 'Bearer ' + $cookies.get('jwt')
+      }
+    });
+    tests.value = response.data;
+    console.log(response.data);
+  } catch (error) {
+    console.error('Ошибка при получении данных:', error);
+  }
+}
 
 onMounted(fetchTestsDetail);
 </script>

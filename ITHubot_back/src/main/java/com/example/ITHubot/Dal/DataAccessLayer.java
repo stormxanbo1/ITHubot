@@ -297,7 +297,7 @@ public class DataAccessLayer {
             session.close();
         }
     }
-    @Transactional
+//    @Transactional
     public Test getTestById(Long id){
         session = sessionFactory.openSession();
         session.beginTransaction();
@@ -332,8 +332,28 @@ public class DataAccessLayer {
                 userScore.setUser(user);
             }
 
-            // Persist the UserScore entity
-            session.persist(userScore);
+            // Get all results for the user
+            List<Result> userResults = session.createQuery("FROM Result WHERE user.userId = :userId", Result.class)
+                    .setParameter("userId", user.getUserId())
+                    .getResultList();
+
+            // Calculate the total score
+            int totalScore = userResults.stream().mapToInt(Result::getScore).sum();
+
+            // Update or create UserScore entity
+            UserScore existingUserScore = session.createQuery("FROM UserScore WHERE user.userId = :userId", UserScore.class)
+                    .setParameter("userId", user.getUserId())
+                    .uniqueResult();
+
+            if (existingUserScore == null) {
+                existingUserScore = new UserScore();
+                existingUserScore.setUser(user);
+                existingUserScore.setTotalScore(totalScore);
+                session.persist(existingUserScore);
+            } else {
+                existingUserScore.setTotalScore(totalScore);
+                session.merge(existingUserScore);
+            }
 
             transaction.commit();
         } catch (Exception e) {
@@ -347,6 +367,7 @@ public class DataAccessLayer {
             }
         }
     }
+
 
 
 

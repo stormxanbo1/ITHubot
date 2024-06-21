@@ -1,7 +1,7 @@
 import asyncio
 import logging
 import os
-
+import jwt
 import aiohttp
 from aiohttp import ClientSession
 from dotenv import load_dotenv
@@ -18,6 +18,8 @@ load_dotenv()
 
 # Initialize the bot with the token from environment variables.
 bot = Bot(token=os.getenv('TOKEN'))
+JWT = None
+secret_key = 'YsSM4XLXnhCBFH8oMDfNl3RRuIaq7uD8hjDUJhszSISG'
 
 # Initialize dispatcher.
 dp = Dispatcher(storage=MemoryStorage())
@@ -69,20 +71,24 @@ async def handle_exit_test(callback_query: CallbackQuery, state: FSMContext):
     # Call the /start command handler
     await cmd_start(callback_query.message)
 
-
 # Define handler for the /start command.
+
+
 @dp.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     userid = message.from_user.id
     async with aiohttp.ClientSession() as session:
+
         # Попытка входа в систему
-        signin_request = {"username": userid, "password": userid}
-        print(signin_request)
+        signin_request = {"username":str(userid) , "password": str(userid)}
+        # print(signin_request)
         async with session.post('http://localhost:3333/secured/signin', json=signin_request) as response:
             if response.status == 200:
                 await bot.send_message(message.chat.id, "Вы успешно вошли в систему!")
-                await state.update_data(jwt=response.text())
-                print(response.text())
+                response_data = await response.text()
+                JWT = response_data
+                await state.update_data(jwt=JWT)
+
             else:
                 # Попытка регистрации
                 signup_request = {"username": userid, "password": userid + 0000}
@@ -93,9 +99,13 @@ async def cmd_start(message: Message, state: FSMContext):
                                                 json=signin_request) as responseses:
                             if responseses.status == 200:
                                 await state.update_data(jwt=response.text())
-                                print(response.text())
+                                response_data = await response.text()
+                                JWT = response_data
+                                await state.update_data(jwt=JWT)
+
                             else:
-                                print("хуйня код")
+
+                                print("----- код")
 
 
                     else:
@@ -145,11 +155,11 @@ async def handle_tests_button(message: Message, state: FSMContext):
 async def show_tests_page(message: Message, state: FSMContext, page: int):
     data = await state.get_data()
 
-    headers = {'Authorization': 'Bearer ' + data.get('jwt')}
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     async with ClientSession() as session:
         try:
             async with session.get('http://localhost:3333/main/get/test', headers=headers) as response:
-                print(response.text())
+                print(await response.text())
                 if response.status == 200:
                     tests = await response.json()
                     logging.info(f"Полученные данные: {tests}")  # Log the full JSON response
@@ -186,10 +196,11 @@ async def show_tests_page(message: Message, state: FSMContext, page: int):
                                                         reply_markup=inline_kb)
                     await state.update_data(message_id=sent_message.message_id)
                 else:
-                    await message.answer("Произошла ошибка при загрузке списка тестов")
+                    await message.answer("Произошла ошибка при загрузке списка тестов" + str(response.status))
         except Exception as e:
             logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
             await message.answer("Произошла ошибка при выполнении запроса на сервер")
+
 
 
 # Обработчики для кнопок "Вперед" и "Назад"
@@ -217,11 +228,12 @@ async def handle_help_button(message: Message):
 # Handler for inline buttons
 @dp.callback_query(lambda callback_query: callback_query.data.startswith("test_"))
 async def handle_test_selection(callback_query: CallbackQuery, state: FSMContext):
+    data= await state.get_data()
     test_id = callback_query.data.split("_")[1]
-
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     async with ClientSession() as session:
         try:
-            async with session.get(f'http://localhost:3333/admin/get/test') as response:
+            async with session.get(f'http://localhost:3333/main/get/test', headers=headers) as response:
                 if response.status == 200:
                     tests = await response.json()
                     selected_test = next((test for test in tests if str(test['testId']) == test_id), None)
@@ -260,10 +272,10 @@ async def handle_answer_selection(callback_query: CallbackQuery, state: FSMConte
     current_question = data['current_question']
     questions = data['questions']
     question = questions[current_question]
-
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     # Make a request to the server to get the answers for the current question
     async with ClientSession() as session:
-        async with session.get(f'http://localhost:3333/admin/get/question/answer/{question["questionId"]}') as response:
+        async with session.get(f'http://localhost:3333/main/get/question/answer/{question["questionId"]}', headers= headers) as response:
             if response.status == 200:
                 answers = await response.json()
             else:
@@ -296,9 +308,10 @@ async def ask_question(message: Message, state: FSMContext):
     data = await state.get_data()
     test_id = data['test_id']
     current_question = data['current_question']
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     async with ClientSession() as session:
         try:
-            async with session.get(f'http://localhost:3333/admin/questions/{test_id}') as response:
+            async with session.get(f'http://localhost:3333/main/questions/{test_id}',headers=headers) as response:
                 if response.status == 200:
                     questions = await response.json()
                     logging.info(f"Questions for test {test_id}: {questions}")
@@ -306,9 +319,9 @@ async def ask_question(message: Message, state: FSMContext):
                     if current_question < len(questions):
                         question = questions[current_question]
                         await state.update_data(questions=questions)
-
+                        headers = {'Authorization': f'Bearer {data.get("jwt")}'}
                         async with session.get(
-                                f'http://localhost:3333/admin/get/question/answer/{question["questionId"]}') as ans_response:
+                                f'http://localhost:3333/main/get/question/answer/{question["questionId"]}', headers=headers) as ans_response:
                             if ans_response.status == 200:
                                 answers = await ans_response.json()
                                 logging.info(f"Answers for question {question['questionId']}: {answers}")
@@ -342,13 +355,81 @@ async def ask_question(message: Message, state: FSMContext):
             await message.answer("Произошла ошибка при выполнении запроса на сервер")
 
 
+# import jwt
+# from aiohttp import ClientSession
+#
+#
+# async def show_result(message: Message, state: FSMContext):
+#     data = await state.get_data()
+#     jwt_token = data.get("jwt")
+#
+#     if jwt_token:
+#         try:
+#             decoded_token = jwt.decode(jwt_token, options={"verify_signature": False})
+#             user_id = decoded_token.get('id')
+#             print(user_id)  # Печатаем ID пользователя для отладки
+#
+#             user_answers = data['user_answers']
+#             questions = data['questions']
+#             test_id = data['test_id']
+#             score = sum(1 for answer in user_answers if answer['isCorrect'])
+#
+#             # Удаляем предыдущее сообщение с вопросом, если оно существует
+#             prev_message_id = data.get('message_id')
+#             if prev_message_id:
+#                 await delete_message(message.chat.id, prev_message_id)
+#
+#             # Сохраняем результат на сервере
+#             result_request = {
+#                 "userId": user_id,
+#                 "testId": test_id,
+#                 "userAnswers": {question['questionId']: answer['answerId'] for question, answer in
+#                                 zip(questions, user_answers)}
+#             }
+#             headers = {'Authorization': f'Bearer {jwt_token}'}
+#             async with ClientSession() as session:
+#                 async with session.post('http://localhost:3333/admin/create/result', json=result_request,
+#                                         headers=headers) as response:
+#                     if response.status == 200:
+#                         await message.answer(
+#                             f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
+#                             reply_markup=main_keyboard)
+#                     else:
+#                         logging.error(f"Error saving result: {response.status}")
+#                         await message.answer("Произошла ошибка при сохранении результата.")
+#
+#             await state.clear()
+#
+#         except jwt.ExpiredSignatureError:
+#             logging.error("JWT token has expired.")
+#             await message.answer("Истек срок действия JWT токена.")
+#
+#         except jwt.InvalidTokenError:
+#             logging.error("Invalid JWT token.")
+#             await message.answer("Неверный JWT токен.")
+#
+#         except Exception as e:
+#             logging.error(f"Error decoding JWT token: {e}")
+#             await message.answer("Произошла ошибка при декодировании JWT токена.")
+#
+#     else:
+#         logging.error("JWT token not found in state data.")
+#         await message.answer("JWT токен не найден в данных состояния.")
+
+
 # Function to display test results and save them to the server
 async def show_result(message: Message, state: FSMContext):
     data = await state.get_data()
+    print()
+    jwt_token = data.get("jwt")
+    decoded_token = jwt.decode(jwt_token, options={"verify_signature": False})
+
+
     user_answers = data['user_answers']
     questions = data['questions']
     test_id = data['test_id']
-    user_id = data['user_id']  # Get the user id from the state
+    user_id = decoded_token.get('id')
+    print(user_id)# Get the user id from the state
     score = sum(1 for answer in user_answers if answer['isCorrect'])  # Corrected key name to 'isCorrect'
 
     # Delete the last question message if exists
@@ -362,8 +443,9 @@ async def show_result(message: Message, state: FSMContext):
         "testId": test_id,
         "userAnswers": {question['questionId']: answer['answerId'] for question, answer in zip(questions, user_answers)}
     }
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     async with ClientSession() as session:
-        async with session.post('http://localhost:3333/admin/create/result', json=result_request) as response:
+        async with session.post('http://localhost:3333/main/create/result', json=result_request, headers=headers) as response:
             if response.status == 200:
                 await message.answer(f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
                                      reply_markup=main_keyboard)

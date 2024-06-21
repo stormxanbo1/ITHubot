@@ -87,7 +87,7 @@ const newAnswer = ref({
 const fetchTestDetail = async () => {
   const id = route.params.id;
   try {
-    const response = await api.get(`/admin/get/test/${id}`, {
+    const response = await api.get(`/main/get/test/${id}`, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
@@ -101,7 +101,7 @@ const fetchTestDetail = async () => {
 const fetchQuestionDetail = async () => {
   const id = route.params.id;
   try {
-    const response = await api.get(`/admin/questions/${id}`, {
+    const response = await api.get(`/main/questions/${id}`, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }
@@ -117,7 +117,7 @@ const fetchQuestionDetail = async () => {
 
 const fetchAnswersForQuestion = async (questionId) => {
   try {
-    const response = await api.get(`/admin/get/question/answer/${questionId}`, {
+    const response = await api.get(`/main/get/question/answer/${questionId}`, {
       headers: {
         'Authorization': 'Bearer ' + $cookies.get('jwt')
       }

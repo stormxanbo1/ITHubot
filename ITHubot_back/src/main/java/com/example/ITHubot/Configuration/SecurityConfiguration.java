@@ -56,7 +56,7 @@
                     .authorizeHttpRequests(authorize -> authorize
     //                        .requestMatchers("/**").permitAll()
                             .requestMatchers("/secured/**").permitAll()
-                            .requestMatchers("/main/**").hasAuthority("ROLE_USER")
+                            .requestMatchers("/main/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                             .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                             .anyRequest().permitAll())
                     .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
