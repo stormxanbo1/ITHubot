@@ -133,7 +133,7 @@ public class AdminController {
     @PostMapping("/create/result")
     public ResponseEntity createResult(@RequestBody Result result){
         dataAccessLayer.createResult(result);
-        return ResponseEntity.ok("User added successfully!");
+        return ResponseEntity.ok("Result added successfully!");
     }
     @DeleteMapping("/delete/result/{id}")
     public ResponseEntity deleteResultById(@PathVariable("id") long id){

@@ -38,7 +38,6 @@ main_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
-
 exit_keyboard = ReplyKeyboardMarkup(
     keyboard=[
         [button_exit]
@@ -46,29 +45,50 @@ exit_keyboard = ReplyKeyboardMarkup(
     resize_keyboard=True
 )
 
+
 class TestStates(StatesGroup):
     IN_TEST = State()
     IN_QUESTION = State()
 
 
-@dp.callback_query(lambda callback_query: callback_query.data == 'exit_test')
+async def delete_message(chat_id, message_id):
+    try:
+        await bot.delete_message(chat_id=chat_id, message_id=message_id)
+    except Exception as e:
+        logging.error(f"Ошибка при удалении сообщения: {e}")
+
+
 async def handle_exit_test(callback_query: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     # Delete the tests page message
     prev_message_id = data.get('message_id')
     if prev_message_id:
-        try:
-            await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=prev_message_id)
-        except Exception as e:
-            logging.error(f"Ошибка при удалении сообщения: {e}")
-
+        await delete_message(callback_query.message.chat.id, prev_message_id)
     # Call the /start command handler
     await cmd_start(callback_query.message)
 
 
 # Define handler for the /start command.
 @dp.message(CommandStart())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, state: FSMContext):
+    # Register the user in the database
+    signup_request = {
+        "telegramId": message.from_user.id,
+        # Add any other user info you need to register
+    }
+    async with ClientSession() as session:
+        async with session.post('http://localhost:3333/secured/signup', json=signup_request) as response:
+            if response.status == 200:
+                user = await response.json()
+                user_id = user['id']
+            else:
+                logging.error(f"Error registering user: {response.status}")
+                await message.answer("Произошла ошибка при регистрации пользователя.")
+                return
+
+    # Save the user id to the state
+    await state.update_data(user_id=user_id)
+
     await message.answer(
         "Привет! Я бот для прохождения тестов. Вы можете выбрать тест из списка и начать его прохождение.\n"
         "\n"
@@ -124,7 +144,8 @@ async def show_tests_page(message: Message, state: FSMContext, page: int):
                     tests_page = tests[start:end]
 
                     # Создаем кнопки для тестов на текущей странице
-                    test_buttons = [[InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}")] for test in tests_page]
+                    test_buttons = [[InlineKeyboardButton(text=test['title'], callback_data=f"test_{test['testId']}")]
+                                    for test in tests_page]
 
                     # Если это не первая страница, добавляем кнопку "Назад"
                     if page > 0:
@@ -142,19 +163,19 @@ async def show_tests_page(message: Message, state: FSMContext, page: int):
                     # Delete the previous page message if exists
                     prev_message_id = data.get('message_id')
                     if prev_message_id:
-                        try:
-                            await bot.delete_message(chat_id=message.chat.id, message_id=prev_message_id)
-                        except Exception as e:
-                            logging.error(f"Ошибка при удалении сообщения: {e}")
+                        await delete_message(message.chat.id, prev_message_id)
 
                     # Send the new page message and save the message_id
-                    sent_message = await message.answer(f"Список доступных тестов (страница {page + 1}):", reply_markup=inline_kb)
+                    sent_message = await message.answer(f"Список доступных тестов (страница {page + 1}):",
+                                                        reply_markup=inline_kb)
                     await state.update_data(message_id=sent_message.message_id)
                 else:
                     await message.answer("Произошла ошибка при загрузке списка тестов")
         except Exception as e:
             logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
             await message.answer("Произошла ошибка при выполнении запроса на сервер")
+
+
 # Обработчики для кнопок "Вперед" и "Назад"
 @dp.callback_query(lambda callback_query: callback_query.data in ["prev_page", "next_page"])
 async def handle_page_buttons(callback_query: CallbackQuery, state: FSMContext):
@@ -211,19 +232,47 @@ async def handle_test_selection(callback_query: CallbackQuery, state: FSMContext
     await callback_query.answer()
 
 
-@dp.callback_query(lambda callback_query: callback_query.data == 'exit_test')
-async def handle_exit_test(callback_query: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    # Delete the tests page message
-    prev_message_id = data.get('message_id')
-    if prev_message_id:
-        try:
-            await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=prev_message_id)
-        except Exception as e:
-            logging.error(f"Ошибка при удалении сообщения: {e}")
+@dp.callback_query(lambda callback_query: callback_query.data.startswith("answer_"))
+async def handle_answer_selection(callback_query: CallbackQuery, state: FSMContext):
+    # Extract the answer_id from the callback data
+    answer_id = callback_query.data.split("_")[1]
 
-    # Call the /start command handler
-    await cmd_start(callback_query.message)
+    # Get the current state data
+    data = await state.get_data()
+
+    # Get the current question
+    current_question = data['current_question']
+    questions = data['questions']
+    question = questions[current_question]
+
+    # Make a request to the server to get the answers for the current question
+    async with ClientSession() as session:
+        async with session.get(f'http://localhost:3333/admin/get/question/answer/{question["questionId"]}') as response:
+            if response.status == 200:
+                answers = await response.json()
+            else:
+                logging.error(f"Error fetching answers: {response.status}")
+                await callback_query.message.answer("Произошла ошибка при загрузке ответов")
+                return
+
+    # Find the selected answer
+    selected_answer = next((answer for answer in answers if str(answer['answerId']) == answer_id), None)
+
+    if selected_answer:
+        # If the answer is found, add it to the user's answers
+        user_answers = data.get('user_answers', [])
+        user_answers.append(selected_answer)
+        await state.update_data(user_answers=user_answers)
+
+        # Move to the next question or finish the test if this was the last question
+        if current_question + 1 < len(questions):
+            await state.update_data(current_question=current_question + 1)
+            await ask_question(callback_query.message, state)
+        else:
+            await show_result(callback_query.message, state)
+    else:
+        # If the answer is not found, send an error message
+        await callback_query.message.answer("Произошла ошибка при выборе ответа.")
 
 
 # Function to request a question and display answer options
@@ -256,10 +305,7 @@ async def ask_question(message: Message, state: FSMContext):
                                 # Delete the previous question message if exists
                                 prev_message_id = data.get('message_id')
                                 if prev_message_id:
-                                    try:
-                                        await bot.delete_message(chat_id=message.chat.id, message_id=prev_message_id)
-                                    except Exception as e:
-                                        logging.error(f"Ошибка при удалении сообщения: {e}")
+                                    await delete_message(message.chat.id, prev_message_id)
 
                                 # Send the question and save the message_id
                                 question_message = await message.answer(
@@ -280,73 +326,39 @@ async def ask_question(message: Message, state: FSMContext):
             await message.answer("Произошла ошибка при выполнении запроса на сервер")
 
 
-# Function to display test results
+# Function to display test results and save them to the server
 async def show_result(message: Message, state: FSMContext):
     data = await state.get_data()
-    answers = data['answers']
-    score = sum(1 for answer in answers if answer['isCorrect'])  # Corrected key name to 'isCorrect'
+    user_answers = data['user_answers']
+    questions = data['questions']
+    test_id = data['test_id']
+    user_id = data['user_id']  # Get the user id from the state
+    score = sum(1 for answer in user_answers if answer['isCorrect'])  # Corrected key name to 'isCorrect'
 
     # Delete the last question message if exists
     prev_message_id = data.get('message_id')
     if prev_message_id:
-        try:
-            await bot.delete_message(chat_id=message.chat.id, message_id=prev_message_id)
-        except Exception as e:
-            logging.error(f"Ошибка при удалении сообщения: {e}")
+        await delete_message(message.chat.id, prev_message_id)
 
-    await message.answer(f"Тест завершен! Ваш результат: {score} из {len(answers)} правильных ответов.",
-                         reply_markup=main_keyboard)
+    # Save the result to the server
+    result_request = {
+        "userId": user_id,
+        "testId": test_id,
+        "userAnswers": {question['questionId']: answer['answerId'] for question, answer in zip(questions, user_answers)}
+    }
+    async with ClientSession() as session:
+        async with session.post('http://localhost:3333/admin/create/result', json=result_request) as response:
+            if response.status == 200:
+                await message.answer(f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
+                                     reply_markup=main_keyboard)
+            else:
+                logging.error(f"Error saving result: {response.status}")
+                await message.answer("Произошла ошибка при сохранении результата.")
+
     await state.clear()
-
-
-# Handler for answer button presses, including exit
-@dp.callback_query(
-    lambda callback_query: callback_query.data.startswith("answer_") or callback_query.data == 'exit_test')
-async def handle_answer(callback_query: CallbackQuery, state: FSMContext):
-    if callback_query.data == 'exit_test':
-        await callback_query.message.answer("Вы вышли из теста.")
-        await state.clear()
-    else:
-        answer_id = callback_query.data.split("_")[1]
-        data = await state.get_data()
-        current_question = data['current_question']
-        questions = data['questions']
-        selected_test = data['selected_test']
-
-        async with ClientSession() as session:
-            try:
-                async with session.get(
-                        f'http://localhost:3333/admin/get/question/answer/{questions[current_question]["questionId"]}') as ans_response:
-                    if ans_response.status == 200:
-                        answers = await ans_response.json()
-                        answer = next((ans for ans in answers if str(ans['answerId']) == answer_id), None)
-
-                        if answer:
-                            data['answers'].append(answer)
-                            await state.update_data(answers=data['answers'])
-
-                            next_question = current_question + 1
-                            await state.update_data(current_question=next_question)
-
-                            if next_question < len(questions):
-                                # Delete the previous question message if exists
-                                prev_message_id = data.get('message_id')
-                                if prev_message_id:
-                                    await bot.delete_message(chat_id=callback_query.message.chat.id,
-                                                             message_id=prev_message_id)
-
-                                await ask_question(callback_query.message, state)
-                            else:
-                                await show_result(callback_query.message, state)
-                        else:
-                            await callback_query.message.answer("Произошла ошибка при обработке ответа")
-                    else:
-                        await callback_query.message.answer("Произошла ошибка при загрузке ответов")
-                        logging.error(f"Error response status for answers: {ans_response.status}")
-            except Exception as e:
-                logging.error(f"Ошибка при выполнении запроса на бэкенд: {e}")
-                await callback_query.message.answer("Произошла ошибка при выполнении запроса на сервер")
-    await callback_query.answer()
+@dp.callback_query()
+async def handle_all_other_updates(callback_query: CallbackQuery):
+    logging.info(f"Unhandled update: {callback_query.data}")
 
 
 async def main():
