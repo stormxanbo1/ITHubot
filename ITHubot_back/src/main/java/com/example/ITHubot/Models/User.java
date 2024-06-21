@@ -27,11 +27,11 @@ public class User {
     private Date createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+//    @JsonIgnore
     private Set<Result> results;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+
     private UserScore userScore;
 
     @ElementCollection(fetch = FetchType.EAGER)

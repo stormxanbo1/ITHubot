@@ -26,13 +26,13 @@ import java.util.Set;
 public class AdminController {
     private final DataAccessLayer dataAccessLayer;
     private final UserDetailsServiceImpl userService;
- /*   private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
-    public void someMethod() {
-        logger.debug("Debug message");
-//        logger.info("Info message");
-        logger.warn("Warning message");
-        logger.error("Error message");
-    }*/
+    /*   private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
+       public void someMethod() {
+           logger.debug("Debug message");
+   //        logger.info("Info message");
+           logger.warn("Warning message");
+           logger.error("Error message");
+       }*/
     @Autowired
     public AdminController(UserDetailsServiceImpl userService, DataAccessLayer dataAccessLayer) {
         this.userService = userService;
@@ -236,7 +236,6 @@ public class AdminController {
         }
         return ResponseEntity.ok(questions);
     }
-
     @GetMapping("get/question/answer/{id}")
     public ResponseEntity<?> getAnswerByQuestionId(@PathVariable("id") Long id) {
         List<Answer> answers = dataAccessLayer.getAnswersByQuestionId(id);

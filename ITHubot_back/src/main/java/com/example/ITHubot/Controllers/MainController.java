@@ -48,27 +48,47 @@ public class MainController {
 //////////////////////////////////
 @PostMapping("/create/result")
 public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) {
+    // Получаем пользователя
     User user = dataAccessLayer.getUserById(resultRequest.getUserId());
     if (user == null) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 
+    // Получаем тест
     Test test = dataAccessLayer.getTestById(resultRequest.getTestId());
     if (test == null) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Test not found");
     }
 
+    // Вычисляем баллы пользователя
     int score = testEvaluationService.calculateScore(test, resultRequest.getUserAnswers());
 
+    // Создаем результат
     Result result = new Result();
     result.setUser(user);
     result.setTest(test);
     result.setScore(score);
     result.setCompletedAt(new Date());
 
+    // Сохраняем результат
     dataAccessLayer.createResult(result);
-    userScoreService.updateUserScore(user, score);
+
+    // Обновляем UserScore для пользователя
+    UserScore userScore = dataAccessLayer.getUserScoreByUserId(user.getUserId());
+    if (userScore == null) {
+        // Если UserScore не существует, создаем новый
+        userScore = new UserScore();
+        userScore.setUser(user);
+        userScore.setTotalScore(score);
+        dataAccessLayer.createUserScore(userScore);
+    } else {
+        // Если UserScore существует, обновляем его
+        userScore.setTotalScore(userScore.getTotalScore() + score);
+        dataAccessLayer.updateUserScore(userScore.getUserScoreId(), userScore);
+    }
 
     return ResponseEntity.ok("Result created successfully");
 }
+
+
 }

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 @Service
+
 public class UserScoreService {
 
     @PersistenceContext
@@ -17,7 +18,10 @@ public class UserScoreService {
 
     @Transactional
     public void updateUserScore(User user, int newScore) {
+        // Merge user if necessary to attach to the current persistence context
         user = entityManager.merge(user);
+
+        // Find existing UserScore or create a new one if not found
         UserScore userScore = entityManager.find(UserScore.class, user.getUserId());
         if (userScore == null) {
             userScore = new UserScore();
@@ -25,8 +29,9 @@ public class UserScoreService {
             userScore.setTotalScore(newScore);
             entityManager.persist(userScore);
         } else {
-            userScore.setTotalScore(userScore.getTotalScore() + newScore);
-                      entityManager.merge(userScore);
+            int currentScore = userScore.getTotalScore() != null ? userScore.getTotalScore() : 0;
+            userScore.setTotalScore(currentScore + newScore);
+            // No need to merge userScore again, since it's already managed
         }
     }
 }

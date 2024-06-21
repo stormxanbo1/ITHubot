@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 
 @Data
 @Entity
-@Table(name = "user_scores",schema = "public", catalog = "ITHubotDB")
+@Table(name = "user_scores", schema = "public", catalog = "ITHubotDB")
 public class UserScore {
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "userScore_id")
+    private Long userScoreId;
 
     private Integer totalScore;
 
