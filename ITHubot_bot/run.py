@@ -76,14 +76,14 @@ async def cmd_start(message: Message, state: FSMContext):
     userid = message.from_user.id
     async with aiohttp.ClientSession() as session:
         # Попытка входа в систему
-        signin_request = {"username": userid}
-        async with session.post('http://localhost:3333/secured/signin', json=signin_request) as response:
+        signin_request = {"username": userid, "password":userid+0000}
+        async with session.post('http://localhost:3333/main/signin', json=signin_request) as response:
             if response.status == 200:
                 await bot.send_message(message.chat.id, "Вы успешно вошли в систему!")
             else:
                 # Попытка регистрации
-                signup_request = {"username": userid}
-                async with session.post('http://localhost:3333/secured/signup', json=signup_request) as response:
+                signup_request = {"username": userid, "password": userid+0000}
+                async with session.post('http://localhost:3333/main/signup', json=signup_request) as response:
                     if response.status == 200:
                         await bot.send_message(message.chat.id, "Вы успешно зарегистрировались!")
                     else:
