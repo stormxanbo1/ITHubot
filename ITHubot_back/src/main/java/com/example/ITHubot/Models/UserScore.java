@@ -9,8 +9,8 @@ import jakarta.persistence.*;
 public class UserScore {
 
     @Id
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "userScore_id")
+    private Long userScoreId;
 
     private Integer totalScore;
 

@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -318,9 +319,11 @@ public class DataAccessLayer {
         return resultList;
     }
     public void createUserScore(UserScore userScore) {
-        session = sessionFactory.openSession();
+        Session session = null;
+        Transaction transaction = null;
         try {
-            session.beginTransaction();
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
 
             // Merge the user entity to attach it to the current session
             User user = userScore.getUser();
@@ -332,10 +335,10 @@ public class DataAccessLayer {
             // Persist the UserScore entity
             session.persist(userScore);
 
-            session.getTransaction().commit();
+            transaction.commit();
         } catch (Exception e) {
-            if (session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
+            if (transaction != null && transaction.isActive()) {
+                transaction.rollback();
             }
             throw e;
         } finally {
@@ -344,6 +347,8 @@ public class DataAccessLayer {
             }
         }
     }
+
+
 
 
     public void deleteUserScoreById(Long id){
