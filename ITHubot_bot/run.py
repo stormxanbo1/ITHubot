@@ -76,16 +76,28 @@ async def cmd_start(message: Message, state: FSMContext):
     userid = message.from_user.id
     async with aiohttp.ClientSession() as session:
         # Попытка входа в систему
-        signin_request = {"username": userid, "password":userid+0000}
-        async with session.post('http://localhost:3333/main/signin', json=signin_request) as response:
+        signin_request = {"username": userid, "password": userid}
+        print(signin_request)
+        async with session.post('http://localhost:3333/secured/signin', json=signin_request) as response:
             if response.status == 200:
                 await bot.send_message(message.chat.id, "Вы успешно вошли в систему!")
+                await state.update_data(jwt=response.text())
+                print(response.text())
             else:
                 # Попытка регистрации
-                signup_request = {"username": userid, "password": userid+0000}
-                async with session.post('http://localhost:3333/main/signup', json=signup_request) as response:
-                    if response.status == 200:
+                signup_request = {"username": userid, "password": userid + 0000}
+                async with session.post('http://localhost:3333/secured/signup', json=signup_request) as responses:
+                    if responses.status == 200:
                         await bot.send_message(message.chat.id, "Вы успешно зарегистрировались!")
+                        async with session.post('http://localhost:3333/secured/signin',
+                                                json=signin_request) as responseses:
+                            if responseses.status == 200:
+                                await state.update_data(jwt=response.text())
+                                print(response.text())
+                            else:
+                                print("хуйня код")
+
+
                     else:
                         await bot.send_message(message.chat.id, "Ошибка при регистрации или входе в систему.")
 
@@ -96,7 +108,6 @@ async def cmd_start(message: Message, state: FSMContext):
         "Для получения справки используйте кнопку 'Помощь'.",
         reply_markup=main_keyboard  # Send the main keyboard with the message
     )
-
 
 
 # Define handler for the /help command.
@@ -132,10 +143,13 @@ async def handle_tests_button(message: Message, state: FSMContext):
 
 # Функция для отображения страницы тестов
 async def show_tests_page(message: Message, state: FSMContext, page: int):
-    data = await state.get_data()  # Получаем данные из состояния FSM
+    data = await state.get_data()
+
+    headers = {'Authorization': 'Bearer ' + data.get('jwt')}
     async with ClientSession() as session:
         try:
-            async with session.get('http://localhost:3333/user/get/test') as response:
+            async with session.get('http://localhost:3333/main/get/test', headers=headers) as response:
+                print(response.text())
                 if response.status == 200:
                     tests = await response.json()
                     logging.info(f"Полученные данные: {tests}")  # Log the full JSON response
@@ -358,6 +372,8 @@ async def show_result(message: Message, state: FSMContext):
                 await message.answer("Произошла ошибка при сохранении результата.")
 
     await state.clear()
+
+
 @dp.callback_query()
 async def handle_all_other_updates(callback_query: CallbackQuery):
     logging.info(f"Unhandled update: {callback_query.data}")

@@ -144,7 +144,7 @@ public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) 
 
 
     @GetMapping("/get/test")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     public ResponseEntity getTest(){
         return ResponseEntity.ok(dataAccessLayer.getTest());
     }
