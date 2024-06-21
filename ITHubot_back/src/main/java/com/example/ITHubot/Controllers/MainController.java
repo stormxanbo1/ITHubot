@@ -74,21 +74,23 @@ public ResponseEntity<?> createResult(@RequestBody ResultRequest resultRequest) 
     dataAccessLayer.createResult(result);
 
     // Обновляем UserScore для пользователя
-    UserScore userScore = dataAccessLayer.getUserScoreByUserId(user.getUserId());
-    if (userScore == null) {
-        // Если UserScore не существует, создаем новый
-        userScore = new UserScore();
-        userScore.setUser(user);
-        userScore.setTotalScore(score);
-        dataAccessLayer.createUserScore(userScore);
-    } else {
-        // Если UserScore существует, обновляем его
-        userScore.setTotalScore(userScore.getTotalScore() + score);
-        dataAccessLayer.updateUserScore(userScore.getUserScoreId(), userScore);
-    }
+
 
     return ResponseEntity.ok("Result created successfully");
 }
 
 
 }
+
+//UserScore userScore = dataAccessLayer.getUserScoreByUserId(user.getUserId());
+//    if (userScore == null) {
+//// Если UserScore не существует, создаем новый
+//userScore = new UserScore();
+//        userScore.setUser(user);
+//        userScore.setTotalScore(score);
+//        dataAccessLayer.createUserScore(userScore);
+//    } else {
+//            // Если UserScore существует, обновляем его
+//            userScore.setTotalScore(userScore.getTotalScore() + score);
+//        dataAccessLayer.updateUserScore(userScore.getUserScoreId(), userScore);
+//        }
