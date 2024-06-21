@@ -28,28 +28,25 @@ import java.util.Set;
 
 @RestController
 @Slf4j
-@RequestMapping("/secured")
+@RequestMapping("/main")
 @CrossOrigin(origins = "http://localhost:8080")
 public class SecurityController {
     private final UserDetailsServiceImpl userService;
-    private final DataAccessLayer dataAccessLayer;
     private static final Logger logger = LoggerFactory.getLogger(SecurityController.class);
     private static final Logger errorLogger = LoggerFactory.getLogger("ERROR_LOGGER");
 
     @Autowired
-    public SecurityController(UserDetailsServiceImpl userService, DataAccessLayer dataAccessLayer) {
+    public SecurityController(UserDetailsServiceImpl userService, JwtCore jwtCore, PasswordEncoder passwordEncoder) {
         this.userService = userService;
-        this.dataAccessLayer = dataAccessLayer;
+        this.jwtCore = jwtCore;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Autowired
-    private JwtCore jwtCore;
+    private final JwtCore jwtCore;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> signup(@RequestBody SignupRequest signupRequest) {
         signupRequest.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
@@ -65,7 +62,6 @@ public class SecurityController {
     }
 
     @PostMapping("/signin")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
         UserDetails user = userService.loadUserByUsername(signinRequest.getUsername());

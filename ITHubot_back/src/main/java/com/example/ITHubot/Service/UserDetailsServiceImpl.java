@@ -20,10 +20,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetailsServiceImpl(DataAccessLayer dataAccessLayer) {
         this.dataAccessLayer = dataAccessLayer;
     }
+
     public String newUser(SignupRequest signupRequest) {
         User user = new User();
         user.setUsername(signupRequest.getName());
         user.setPassword(signupRequest.getPassword());
+        user.setRoles(signupRequest.getRoles());
         user.getUserId();
 
         return dataAccessLayer.newUserToDatabase(user);

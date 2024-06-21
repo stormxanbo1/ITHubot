@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
-@RequestMapping("/main")
+@RequestMapping("/user")
 
 public class MainController {
     @Autowired

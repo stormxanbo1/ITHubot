@@ -35,7 +35,7 @@ public class User {
     private UserScore userScore;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "User_Role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "User_Role", schema = "public", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<String> roles = new HashSet<>();
 

@@ -23,7 +23,6 @@ public class UserDetailsImpl implements UserDetails {
     private String userName;
     private String password;
     private Set<String> roles;
-//    private Date createdAt;
 
     public static UserDetailsImpl build(User user){
         return new UserDetailsImpl(
@@ -33,12 +32,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.getRoles());
 
     }
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return roles.stream()
-//                .map(role -> new SimpleGrantedAuthority(role))
-//                .collect(Collectors.toList());
-//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
