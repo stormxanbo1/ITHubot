@@ -454,16 +454,16 @@ async def show_result(message: Message, state: FSMContext):
         async with session.post('http://localhost:3333/main/create/result', json=result_request, headers=headers) as response:
             if response.status == 200:
 
-                async with ClientSession() as session:
-                    async with session.post('http://localhost:3333/main/create/result', json=result_request,
-                                            headers=headers) as response:
-                        if response.status == 200:
-                            await message.answer(
-                                f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
-                                reply_markup=main_keyboard)
-                        else:
-                            logging.error(f"Error saving result: {response.status}")
-                            await message.answer("Произошла ошибка при сохранении результата.")
+                # async with ClientSession() as session:
+                #     async with session.post('http://localhost:3333/main/create/result', json=result_request,
+                #                             headers=headers) as response:
+                #         if response.status == 200:
+                #             await message.answer(
+                #                 f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
+                #                 reply_markup=main_keyboard)
+                #         else:
+                #             logging.error(f"Error saving result: {response.status}")
+                #             await message.answer("Произошла ошибка при сохранении результата.")
 
 
                 await message.answer(f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
@@ -472,7 +472,14 @@ async def show_result(message: Message, state: FSMContext):
                 logging.error(f"Error saving result: {response.status}")
                 await message.answer("Произошла ошибка при сохранении результата.")
 
-    await state.clear()
+    current_data = await state.get_data()
+
+    # Удаляем параметр 'score' из текущих данных
+    if 'score' in current_data:
+        del current_data['score']
+
+    # Обновляем state.data с обновленными данными
+    await state.set_data(current_data)
 
 
 
