@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+
+import aiohttp
 from aiohttp import ClientSession
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
@@ -71,30 +73,30 @@ async def handle_exit_test(callback_query: CallbackQuery, state: FSMContext):
 # Define handler for the /start command.
 @dp.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
-    # Register the user in the database
-    signup_request = {
-        "telegramId": message.from_user.id,
-        # Add any other user info you need to register
-    }
-    async with ClientSession() as session:
-        async with session.post('http://localhost:3333/secured/signup', json=signup_request) as response:
+    userid = message.from_user.id
+    async with aiohttp.ClientSession() as session:
+        # Попытка входа в систему
+        signin_request = {"username": userid, "password":userid+0000}
+        async with session.post('http://localhost:3333/main/signin', json=signin_request) as response:
             if response.status == 200:
-                user = await response.json()
-                user_id = user['id']
+                await bot.send_message(message.chat.id, "Вы успешно вошли в систему!")
             else:
-                logging.error(f"Error registering user: {response.status}")
-                await message.answer("Произошла ошибка при регистрации пользователя.")
-                return
+                # Попытка регистрации
+                signup_request = {"username": userid, "password": userid+0000}
+                async with session.post('http://localhost:3333/main/signup', json=signup_request) as response:
+                    if response.status == 200:
+                        await bot.send_message(message.chat.id, "Вы успешно зарегистрировались!")
+                    else:
+                        await bot.send_message(message.chat.id, "Ошибка при регистрации или входе в систему.")
 
-    # Save the user id to the state
-    await state.update_data(user_id=user_id)
-
-    await message.answer(
+    await bot.send_message(
+        message.chat.id,
         "Привет! Я бот для прохождения тестов. Вы можете выбрать тест из списка и начать его прохождение.\n"
         "\n"
         "Для получения справки используйте кнопку 'Помощь'.",
         reply_markup=main_keyboard  # Send the main keyboard with the message
     )
+
 
 
 # Define handler for the /help command.
