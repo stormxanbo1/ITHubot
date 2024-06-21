@@ -55,8 +55,8 @@
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .authorizeHttpRequests(authorize -> authorize
     //                        .requestMatchers("/**").permitAll()
-                            .requestMatchers("/main/**").permitAll()
-                            .requestMatchers("/user/**").hasAuthority("ROLE_USER")
+                            .requestMatchers("/secured/**").permitAll()
+                            .requestMatchers("/main/**").hasAuthority("ROLE_USER")
                             .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                             .anyRequest().permitAll())
                     .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);

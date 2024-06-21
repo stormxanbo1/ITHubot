@@ -135,7 +135,7 @@ async def show_tests_page(message: Message, state: FSMContext, page: int):
     data = await state.get_data()  # Получаем данные из состояния FSM
     async with ClientSession() as session:
         try:
-            async with session.get('http://localhost:3333/admin/get/test') as response:
+            async with session.get('http://localhost:3333/user/get/test') as response:
                 if response.status == 200:
                     tests = await response.json()
                     logging.info(f"Полученные данные: {tests}")  # Log the full JSON response

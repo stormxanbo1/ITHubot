@@ -28,7 +28,7 @@ import java.util.Set;
 
 @RestController
 @Slf4j
-@RequestMapping("/main")
+@RequestMapping("/secured")
 @CrossOrigin(origins = "http://localhost:8080")
 public class SecurityController {
     private final UserDetailsServiceImpl userService;

@@ -31,7 +31,7 @@ export default {
       const isFormCorrect = await this.v$.$validate();
       if (isFormCorrect) {
         try {
-          const response = await api.post("/main/signup", newUser);
+          const response = await api.post("/secured/signup", newUser);
           console.log("Успешно зарегистрирован:", newUser);
           window.location.href = "/log";
         } catch (error) {

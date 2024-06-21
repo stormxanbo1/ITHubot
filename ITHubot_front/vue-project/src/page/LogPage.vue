@@ -45,7 +45,7 @@ export default {
       if (isFormCorrect){
         try {
           const response = await api
-            .post('/main/signin', User)
+            .post('/secured/signin', User)
             .then((response) => {
               this.responseData = response.data;
               this.errorMessage = response.data.message;
