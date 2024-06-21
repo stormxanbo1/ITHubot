@@ -161,11 +161,11 @@ async def handle_tests_button(message: Message, state: FSMContext):
 async def show_tests_page(message: Message, state: FSMContext, page: int):
     data = await state.get_data()
 
-    headers = {'Authorization': f'Bearer: {data.get("jwt")}'}
+    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
     async with ClientSession() as session:
         try:
             async with session.get('http://localhost:3333/main/get/test', headers=headers) as response:
-                print(await response.text())
+                # print(await response.text())
                 if response.status == 200:
                     tests = await response.json()
                     logging.info(f"Полученные данные: {tests}")  # Log the full JSON response

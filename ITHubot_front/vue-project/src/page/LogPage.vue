@@ -2,6 +2,7 @@
 import api from '../api.js';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import jwt_decode from 'vue-jwt-decode'
 
 
 export default {
@@ -52,8 +53,8 @@ export default {
               this.jwt = response.data;
               this.$cookies.remove('jwt');
               this.$cookies.set('jwt', this.jwt, '1d');
-             
-              window.location.href = '/main';
+              this.PROpysk();
+              
             })
             .catch((error) => {
               console.error(error);
@@ -63,6 +64,18 @@ export default {
         } catch (error) {}
       }
     },
+
+    PROpysk(){
+      const token = this.$cookies.get('jwt'); 
+      const decodedToken = jwt_decode.decode(token);
+      console.log(decodedToken)
+      if(decodedToken.roles == "ROLE_ADMIN"){
+        window.location.href = '/main';
+      }
+      else{
+        alert("У вас недостаточно прав")
+      }
+    }
   },
 
 };
