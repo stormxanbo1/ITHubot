@@ -58,19 +58,19 @@ const fetchTestsDetail = async () => {
   }
 };
  
-const DeleteTest = acync() =>{
-  try {
-    const response = await api.get('/admin/delete/test', {
-      headers: {
-        'Authorization': 'Bearer ' + $cookies.get('jwt')
-      }
-    });
-    tests.value = response.data;
-    console.log(response.data);
-  } catch (error) {
-    console.error('Ошибка при получении данных:', error);
-  }
-}
+// const DeleteTest = acync() =>{
+//   try {  
+//     const response = await api.get('/admin/delete/test', {
+//       headers: {
+//         'Authorization': 'Bearer ' + $cookies.get('jwt')
+//       }
+//     });
+//     tests.value = response.data;
+//     console.log(response.data);
+//   } catch (error) {
+//     console.error('Ошибка при получении данных:', error);
+//   }
+// }
 
 onMounted(fetchTestsDetail);
 </script>

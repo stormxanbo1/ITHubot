@@ -88,21 +88,27 @@ async def cmd_start(message: Message, state: FSMContext):
                 response_data = await response.text()
                 JWT = response_data
                 await state.update_data(jwt=JWT)
+                await state.update_data(jwt=JWT)
+                data = await state.get_data()
+                print(data.get("jwt"))
 
             else:
                 # Попытка регистрации
-                signup_request = {"username": userid, "password": userid + 0000}
+                signup_request = {"name":str(userid) , "password": str(userid)}
                 async with session.post('http://localhost:3333/secured/signup', json=signup_request) as responses:
                     if responses.status == 200:
                         await bot.send_message(message.chat.id, "Вы успешно зарегистрировались!")
+                        signin_request = {"username": str(userid), "password": str(userid)}
+                        # print(signin_request)
                         async with session.post('http://localhost:3333/secured/signin',
-                                                json=signin_request) as responseses:
-                            if responseses.status == 200:
-                                await state.update_data(jwt=response.text())
+                                                json=signin_request) as responsed:
+                            if responsed.status == 200:
+                                await bot.send_message(message.chat.id, "Вы успешно вошли в систему!")
                                 response_data = await response.text()
                                 JWT = response_data
                                 await state.update_data(jwt=JWT)
-
+                                data= await state.get_data()
+                                print(data.get("jwt"))
                             else:
 
                                 print("----- код")
@@ -155,7 +161,7 @@ async def handle_tests_button(message: Message, state: FSMContext):
 async def show_tests_page(message: Message, state: FSMContext, page: int):
     data = await state.get_data()
 
-    headers = {'Authorization': f'Bearer {data.get("jwt")}'}
+    headers = {'Authorization': f'Bearer: {data.get("jwt")}'}
     async with ClientSession() as session:
         try:
             async with session.get('http://localhost:3333/main/get/test', headers=headers) as response:
@@ -447,6 +453,19 @@ async def show_result(message: Message, state: FSMContext):
     async with ClientSession() as session:
         async with session.post('http://localhost:3333/main/create/result', json=result_request, headers=headers) as response:
             if response.status == 200:
+
+                async with ClientSession() as session:
+                    async with session.post('http://localhost:3333/main/create/result', json=result_request,
+                                            headers=headers) as response:
+                        if response.status == 200:
+                            await message.answer(
+                                f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
+                                reply_markup=main_keyboard)
+                        else:
+                            logging.error(f"Error saving result: {response.status}")
+                            await message.answer("Произошла ошибка при сохранении результата.")
+
+
                 await message.answer(f"Тест завершен! Ваш результат: {score} из {len(questions)} правильных ответов.",
                                      reply_markup=main_keyboard)
             else:
@@ -454,6 +473,13 @@ async def show_result(message: Message, state: FSMContext):
                 await message.answer("Произошла ошибка при сохранении результата.")
 
     await state.clear()
+
+
+
+
+
+
+
 
 
 @dp.callback_query()
